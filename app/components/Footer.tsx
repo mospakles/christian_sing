@@ -1,224 +1,218 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import {
   Mail,
   Phone,
   MapPin,
+  Clock,
   Facebook,
-  Twitter,
   Instagram,
   Youtube,
-  Heart,
+  Twitter,
   ArrowUp,
-  X,
+  Music,
 } from "lucide-react";
 
-const Footer: React.FC = () => {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+const PAGES = [
+  ["Home", "/"],
+  ["About Us", "/about"],
+  ["Mission", "/mission"],
+  ["Ministries", "/ministries"],
+  ["Impact", "/impact"],
+  ["Contact", "/contact"],
+];
+const INVOLVE = [
+  ["Get Involved", "/get-involved"],
+  ["Membership", "/membership"],
+  ["Prison Ministry", "/ministries"],
+  ["School Ministry", "/ministries"],
+  ["Health & Social", "/ministries"],
+];
+const SOCIALS = [
+  { I: Facebook, h: "https://facebook.com", l: "Facebook" },
+  { I: Twitter, h: "https://twitter.com", l: "Twitter" },
+  { I: Instagram, h: "https://instagram.com", l: "Instagram" },
+  { I: Youtube, h: "https://youtube.com", l: "YouTube" },
+];
+const CONTACTS = [
+  {
+    I: Mail,
+    v: "info@christiansingfoundation.org",
+    h: "mailto:info@christiansingfoundation.org",
+  },
+  { I: Phone, v: "08035390860 / 08032006518", h: "tel:+2348035390860" },
+  { I: MapPin, v: "Lagos, Nigeria", h: "#" },
+  { I: Clock, v: "Saturday 4:00–6:00 PM", h: "#" },
+];
 
+export default function Footer() {
   return (
-    <footer className="relative bg-gradient-to-br from-purple-900 via-purple-800 to-sky-900 text-white overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden opacity-10">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          {/* About Section */}
-          <div className="transform hover:scale-105 transition-all duration-300">
-            <div className="flex items-center mb-4">
-              <Heart className="h-8 w-8 text-sky-400 animate-pulse" />
-              <h3 className="text-xl font-bold ml-2">ChristianSing</h3>
-            </div>
-            <p className="text-sky-100 text-sm leading-relaxed">
-              Propagating the Word through excellence in church/choral music
-              using education, performance, composition and advocacy.
-            </p>
-          </div>
-
-          {/* Quick Links */}
+    <footer className="cs-footer">
+      <div className="cs-footer__gold-stripe" />
+      <div
+        className="container"
+        style={{
+          paddingTop: "clamp(40px,7vw,64px)",
+          paddingBottom: "clamp(28px,5vw,40px)",
+        }}
+      >
+        <div className="g-footer">
+          {/* Brand */}
           <div>
-            <h4 className="text-lg font-bold mb-4 text-sky-300">Quick Links</h4>
-            <ul className="space-y-2">
-              {[
-                "About Us",
-                "Our Mission",
-                "Ministries",
-                "Membership",
-                "Get Involved",
-              ].map((link, index) => (
-                <li
-                  key={link}
-                  className="transform hover:translate-x-2 transition-all duration-300"
-                  style={{ animationDelay: `${index * 100}ms` }}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                marginBottom: 20,
+              }}
+            >
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  minWidth: 40,
+                  borderRadius: "var(--r-m)",
+                  background: "rgba(255,255,255,0.10)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Music size={18} color="#fff" />
+              </div>
+              <div>
+                <div
+                  className="heading"
+                  style={{
+                    fontSize: "clamp(0.95rem,1.5vw,1.05rem)",
+                    color: "#fff",
+                    lineHeight: 1,
+                  }}
                 >
-                  <a
-                    href={`/${link.toLowerCase().replace(/\s+/g, "-")}`}
-                    className="text-sky-200 hover:text-white text-sm flex items-center group"
-                  >
-                    <span className="w-0 group-hover:w-4 h-0.5 bg-sky-400 transition-all duration-300 mr-2"></span>
-                    {link}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact Information */}
-          <div>
-            <h4 className="text-lg font-bold mb-4 text-sky-300">Contact Us</h4>
-            <ul className="space-y-3 text-sm text-sky-100">
-              <li className="flex items-start group hover:text-white transition-colors duration-300">
-                <Mail className="h-4 w-4 mr-2 mt-1 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
-                <a
-                  href="mailto:info@christiansingfoundation.org"
-                  className="hover:text-white"
-                >
-                  info@christiansingfoundation.org
-                </a>
-              </li>
-              <li className="flex items-start group hover:text-white transition-colors duration-300">
-                <Phone className="h-4 w-4 mr-2 mt-1 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
-                <div>
-                  <a
-                    href="tel:+2348035390860"
-                    className="block hover:text-white"
-                  >
-                    08035390860
-                  </a>
-                  <a
-                    href="tel:+2348032006518"
-                    className="block hover:text-white"
-                  >
-                    08032006518
-                  </a>
+                  ChristianSing
                 </div>
-              </li>
-              <li className="flex items-start group hover:text-white transition-colors duration-300">
-                <MapPin className="h-4 w-4 mr-2 mt-1 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
-                <span>Lagos, Nigeria</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Social Media */}
-          <div>
-            <h4 className="text-lg font-bold mb-4 text-sky-300">Follow Us</h4>
-            <div className="flex space-x-3">
-              {[
-                {
-                  Icon: Facebook,
-                  href: "https://facebook.com",
-                  color: "hover:bg-sky-600",
-                },
-                {
-                  Icon: X,
-                  href: "https://twitter.com",
-                  color: "hover:bg-sky-500",
-                },
-                {
-                  Icon: Instagram,
-                  href: "https://instagram.com",
-                  color: "hover:bg-purple-600",
-                },
-                {
-                  Icon: Youtube,
-                  href: "https://youtube.com",
-                  color: "hover:bg-red-600",
-                },
-              ].map(({ Icon, href, color }, index) => (
-                <a
-                  key={href}
-                  href={href}
+                <div
+                  className="eyebrow"
+                  style={{
+                    color: "var(--gold)",
+                    fontSize: "0.54rem",
+                    marginTop: 2,
+                  }}
+                >
+                  Foundation
+                </div>
+              </div>
+            </div>
+            <p
+              style={{
+                color: "rgba(255,255,255,0.42)",
+                fontSize: "clamp(0.8rem,1.2vw,0.875rem)",
+                lineHeight: 1.75,
+                maxWidth: 260,
+                marginBottom: 24,
+              }}
+            >
+              Propagating the Word through excellence in church and choral music
+              — education, performance, composition and advocacy.
+            </p>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {SOCIALS.map(({ I, h, l }) => (
+                <motion.a
+                  key={l}
+                  href={h}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`bg-white bg-opacity-10 p-3 rounded-lg backdrop-blur-sm ${color} transition-all duration-300 transform hover:scale-110 hover:-rotate-6`}
-                  style={{ animationDelay: `${index * 100}ms` }}
-                  aria-label={`Visit our ${Icon.name}`}
+                  aria-label={l}
+                  className="cs-footer__social"
+                  whileHover={{ y: -3, scale: 1.1 }}
                 >
-                  <Icon className="h-5 w-5" />
-                </a>
+                  <I size={15} />
+                </motion.a>
               ))}
             </div>
           </div>
+
+          {/* Pages */}
+          <div>
+            <p
+              className="eyebrow"
+              style={{ color: "var(--gold)", marginBottom: 18 }}
+            >
+              Pages
+            </p>
+            {PAGES.map(([l, h]) => (
+              <a key={l} href={h} className="cs-footer__link">
+                {l}
+              </a>
+            ))}
+          </div>
+
+          {/* Get Involved */}
+          <div>
+            <p
+              className="eyebrow"
+              style={{ color: "var(--gold)", marginBottom: 18 }}
+            >
+              Get Involved
+            </p>
+            {INVOLVE.map(([l, h]) => (
+              <a key={l} href={h} className="cs-footer__link">
+                {l}
+              </a>
+            ))}
+          </div>
+
+          {/* Contact */}
+          <div>
+            <p
+              className="eyebrow"
+              style={{ color: "var(--gold)", marginBottom: 18 }}
+            >
+              Contact
+            </p>
+            {CONTACTS.map(({ I, v, h }) => (
+              <a key={v} href={h} className="cs-footer__contact-link">
+                <I
+                  size={14}
+                  style={{ marginTop: 2, flexShrink: 0, color: "var(--gold)" }}
+                />
+                <span>{v}</span>
+              </a>
+            ))}
+            <a
+              href="/contact"
+              className="btn btn-gold"
+              style={{
+                marginTop: 16,
+                padding: "10px 20px",
+                fontSize: "0.72rem",
+              }}
+            >
+              Send a Message →
+            </a>
+          </div>
         </div>
 
-        {/* Divider with Animation */}
-        <div className="relative my-8">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-sky-500 opacity-30"></div>
-          </div>
-          <div className="relative flex justify-center">
-            <span className="bg-gradient-to-r from-purple-900 to-sky-900 px-4">
-              <Heart className="h-6 w-6 text-sky-400 animate-pulse" />
-            </span>
-          </div>
-        </div>
-
-        {/* Copyright */}
-        <div className="text-center text-sm text-sky-200">
-          <p className="mb-2 animate-fadeIn">
-            &copy; {new Date().getFullYear()} ChristianSing Foundation. All
-            rights reserved.
+        {/* Bottom */}
+        <div className="cs-footer__bottom">
+          <p className="cs-footer__copyright">
+            © {new Date().getFullYear()} ChristianSing Foundation ·
+            Not-for-Profit · Affiliated with the Royal School of Church Music,
+            England
           </p>
-          <p className="text-xs animate-fadeIn animation-delay-200">
-            A Not-for-Profit Organisation | Affiliated with the Royal School of
-            Church Music, England
-          </p>
+          <motion.button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="cs-footer__back-top"
+            whileHover={{ y: -3 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Back to top <ArrowUp size={13} />
+          </motion.button>
         </div>
       </div>
-
-      {/* Scroll to Top Button */}
-      <button
-        onClick={scrollToTop}
-        className="absolute bottom-8 right-8 bg-gradient-to-r from-sky-500 to-purple-600 p-3 rounded-full shadow-2xl hover:shadow-sky-500/50 transform hover:scale-110 hover:-translate-y-1 transition-all duration-300 group"
-        aria-label="Scroll to top"
-      >
-        <ArrowUp className="h-6 w-6 group-hover:animate-bounce" />
-      </button>
-
-      <style>{`
-        @keyframes blob {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          25% { transform: translate(20px, -50px) scale(1.1); }
-          50% { transform: translate(-20px, 20px) scale(0.9); }
-          75% { transform: translate(50px, 50px) scale(1.05); }
-        }
-        
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .animate-fadeIn {
-          animation: fadeIn 1s ease-out forwards;
-        }
-        
-        .animation-delay-200 {
-          animation-delay: 0.2s;
-          opacity: 0;
-        }
-      `}</style>
     </footer>
   );
-};
-
-export default Footer;
+}

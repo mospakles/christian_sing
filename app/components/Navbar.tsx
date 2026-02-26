@@ -1,153 +1,228 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Menu, X, Book, ChevronDown } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, Music } from "lucide-react";
 
-interface NavbarProps {
-  currentPage?: string;
-}
+const LINKS = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Mission", href: "/mission" },
+  { label: "Ministries", href: "/ministries" },
+  { label: "Get Involved", href: "/get-involved" },
+  { label: "Impact", href: "/impact" },
+  { label: "Membership", href: "/membership" },
+  { label: "Contact", href: "/contact" },
+] as const;
 
-const Navbar: React.FC<NavbarProps> = ({ currentPage = "home" }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+const SPRING = { type: "spring", stiffness: 440, damping: 36 } as const;
+const EASE = [0.22, 1, 0.36, 1] as const;
+
+export default function Navbar({ current = "home" }: { current?: string }) {
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const fn = () => setScrolled(window.scrollY > 44);
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  const navItems = [
-    { label: "Home", href: "/" },
-    { label: "About Us", href: "/about" },
-    { label: "Our Mission", href: "/mission" },
-    { label: "Ministries", href: "/ministries" },
-    { label: "Get Involved", href: "/get-involved" },
-    { label: "Impact Stories", href: "/impact" },
-    { label: "Membership", href: "/membership" },
-    // { label: "Blog", href: "/blog" },
-    { label: "Contact", href: "/contact" },
-  ];
+  useEffect(() => {
+    const fn = () => {
+      if (window.innerWidth >= 1024) setOpen(false);
+    };
+    window.addEventListener("resize", fn);
+    return () => window.removeEventListener("resize", fn);
+  }, []);
+
+  /* Lock body scroll when mobile drawer is open */
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  const slug = (href: string) => (href === "/" ? "home" : href.slice(1));
+  const active = (href: string) => current === slug(href);
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled
-          ? "bg-white shadow-xl py-3"
-          : "bg-gradient-to-r from-sky-50 to-purple-50 py-5"
-      }`}
+    <motion.header
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: EASE }}
+      className={`navbar${scrolled ? " navbar--scrolled" : ""}`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
-          {/* Logo with Animation */}
-          <Link href="/" className="flex items-center group">
-            {/* <div className="ml-3"> */}
-              <Image
-                src="/images/logo.jpeg"
-                alt="logo"
-                width={60}
-                height={60}
-              />
-            {/* </div> */}
-          </Link>
+      <div className="navbar__gold-bar" />
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex space-x-1">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className={`relative px-4 py-2 text-sm font-semibold transition-all duration-300 rounded-lg group ${
-                  currentPage === item.href.slice(1) ||
-                  (item.href === "/" && currentPage === "home")
-                    ? "text-purple-700"
-                    : "text-gray-700 hover:text-purple-700"
-                }`}
-              >
-                <span className="relative z-10">{item.label}</span>
-                <div
-                  className={`absolute inset-0 bg-gradient-to-r from-sky-100 to-purple-100 rounded-lg transform transition-all duration-300 ${
-                    currentPage === item.href.slice(1) ||
-                    (item.href === "/" && currentPage === "home")
-                      ? "scale-100 opacity-100"
-                      : "scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100"
-                  }`}
-                ></div>
-              </a>
-            ))}
-          </nav>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="lg:hidden relative p-2 text-purple-700 hover:bg-gradient-to-r hover:from-sky-100 hover:to-purple-100 rounded-lg transition-all duration-300"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            <div className="relative w-6 h-6">
-              <Menu
-                className={`absolute inset-0 transform transition-all duration-300 ${
-                  isMenuOpen ? "rotate-90 opacity-0" : "rotate-0 opacity-100"
-                }`}
-              />
-              <X
-                className={`absolute inset-0 transform transition-all duration-300 ${
-                  isMenuOpen ? "rotate-0 opacity-100" : "-rotate-90 opacity-0"
-                }`}
-              />
-            </div>
-          </button>
-        </div>
-
-        {/* Mobile Navigation */}
-        <div
-          className={`lg:hidden overflow-hidden transition-all duration-500 ${
-            isMenuOpen ? "max-h-screen opacity-100 mt-4" : "max-h-0 opacity-0"
-          }`}
+      <div className="container navbar__inner">
+        {/* ── Logo ── */}
+        <motion.a
+          href="/"
+          className="navbar__logo"
+          whileHover={{ scale: 1.02 }}
         >
-          <nav className="space-y-2 pb-4">
-            {navItems.map((item, index) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className={`block py-3 px-4 text-sm font-semibold rounded-lg transition-all duration-300 transform ${
-                  currentPage === item.href.slice(1) ||
-                  (item.href === "/" && currentPage === "home")
-                    ? "bg-gradient-to-r from-sky-500 to-purple-600 text-white shadow-lg scale-105"
-                    : "text-gray-700 hover:bg-gradient-to-r hover:from-sky-100 hover:to-purple-100 hover:scale-105"
-                }`}
-                style={{
-                  animationDelay: `${index * 50}ms`,
-                  animation: isMenuOpen
-                    ? "slideInRight 0.3s ease-out forwards"
-                    : "none",
-                }}
-                onClick={() => setIsMenuOpen(false)}
+          <motion.div
+            className="navbar__logo-icon"
+            whileHover={{ rotate: 10, scale: 1.1 }}
+            transition={{ type: "spring", stiffness: 360 }}
+          >
+            <Music size={18} color="#fff" />
+          </motion.div>
+          <div className="navbar__logo-text">
+            <div className="navbar__logo-text-primary">ChristianSing</div>
+            <div className="navbar__logo-text-sub">Foundation</div>
+          </div>
+        </motion.a>
+
+        {/* ── Desktop nav ── */}
+        <nav className="navbar__nav" aria-label="Main navigation">
+          {LINKS.map((link, i) => {
+            const isActive = active(link.href);
+            return (
+              <motion.a
+                key={link.href}
+                href={link.href}
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.04 }}
+                className={`navbar__link${isActive ? " navbar__link--active" : ""}`}
               >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-        </div>
+                {link.label}
+                {isActive && (
+                  <>
+                    <motion.span
+                      layoutId="nav-bar"
+                      transition={SPRING}
+                      style={{
+                        position: "absolute",
+                        bottom: 3,
+                        left: 6,
+                        right: 6,
+                        height: 2,
+                        background: "var(--viridian)",
+                        borderRadius: 2,
+                      }}
+                    />
+                    <motion.span
+                      layoutId="nav-dot"
+                      transition={SPRING}
+                      style={{
+                        position: "absolute",
+                        bottom: -1,
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        width: 5,
+                        height: 5,
+                        borderRadius: "50%",
+                        background: "var(--gold)",
+                      }}
+                    />
+                  </>
+                )}
+              </motion.a>
+            );
+          })}
+          <motion.a
+            href="/get-involved"
+            className="btn btn-viridian"
+            style={{
+              marginLeft: 12,
+              padding: "10px 20px",
+              fontSize: "0.78rem",
+            }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            Donate ♥
+          </motion.a>
+        </nav>
+
+        {/* ── Mobile hamburger ── */}
+        <motion.button
+          onClick={() => setOpen(!open)}
+          whileTap={{ scale: 0.9 }}
+          className="navbar__hamburger"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+        >
+          <AnimatePresence mode="wait">
+            {open ? (
+              <motion.span
+                key="x"
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.15 }}
+              >
+                <X size={18} />
+              </motion.span>
+            ) : (
+              <motion.span
+                key="m"
+                initial={{ rotate: 90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: -90, opacity: 0 }}
+                transition={{ duration: 0.15 }}
+              >
+                <Menu size={18} />
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.button>
       </div>
 
-      <style>{`
-        @keyframes slideInRight {
-          from {
-            opacity: 0;
-            transform: translateX(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-      `}</style>
-    </header>
+      {/* ── Mobile drawer ── */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.28, ease: EASE }}
+            className="navbar__drawer"
+            style={{ maxHeight: "calc(100dvh - 72px)", overflowY: "auto" }}
+          >
+            <div
+              className="container"
+              style={{ paddingBlock: 12, paddingBottom: 20 }}
+            >
+              {LINKS.map((link, i) => {
+                const isActive = active(link.href);
+                return (
+                  <motion.a
+                    key={link.href}
+                    href={link.href}
+                    initial={{ opacity: 0, x: -14 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.03 }}
+                    onClick={() => setOpen(false)}
+                    className={`navbar__drawer-link${isActive ? " navbar__drawer-link--active" : ""}`}
+                  >
+                    {isActive && <span className="navbar__drawer-accent" />}
+                    {link.label}
+                  </motion.a>
+                );
+              })}
+              <div className="navbar__drawer-cta">
+                <a
+                  href="/get-involved"
+                  className="btn btn-viridian"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    width: "100%",
+                  }}
+                  onClick={() => setOpen(false)}
+                >
+                  Donate Now ♥
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
-};
-
-export default Navbar;
+}

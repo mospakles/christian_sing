@@ -1,426 +1,746 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import {
-  Users,
-  Book,
-  Heart,
-  Calendar,
-  ArrowRight,
-  Sparkles,
-  Music,
-  Award,
-} from "lucide-react";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { ArrowRight, Star } from "lucide-react";
+import { Img, Rise, Label, GoldRule, Fade, Wm } from "./components/ui";
+import Image from "next/image";
 
-const HomePage: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false);
+const E: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+/* ── Stat ─────────────────────────────────────────────────── */
+function Stat({
+  n,
+  label,
+  delay,
+}: {
+  n: string;
+  label: string;
+  delay: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true });
+  return (
+    <motion.div
+      ref={ref}
+      className="cs-stat"
+      initial={{ opacity: 0, y: 24 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.65, delay, ease: E }}
+    >
+      <div className="cs-stat__n">{n}</div>
+      <div className="cs-stat__label">{label}</div>
+    </motion.div>
+  );
+}
+
+/* ── Ministry card ────────────────────────────────────────── */
+function MinCard({
+  n,
+  title,
+  desc,
+  imgLabel,
+  tag,
+  delay,
+}: {
+  n: string;
+  title: string;
+  desc: string;
+  imgLabel: string;
+  tag: string;
+  delay: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 32 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay, ease: E }}
+    >
+      <motion.a
+        href="/ministries"
+        className="cs-min-card"
+        whileHover={{ y: -8 }}
+        transition={{ type: "spring", stiffness: 260 }}
+      >
+        <div className="cs-min-card__img img-fill img-dark">
+          <span>{imgLabel}</span>
+          <div className="cs-min-card__num" aria-hidden>
+            {n}
+          </div>
+        </div>
+        <div className="cs-min-card__body">
+          <span className="badge badge-viridian">{tag}</span>
+          <div className="cs-min-card__title">{title}</div>
+          <p className="cs-min-card__desc">{desc}</p>
+          <span className="cs-min-card__cta">
+            Learn more <ArrowRight size={12} />
+          </span>
+        </div>
+      </motion.a>
+    </motion.div>
+  );
+}
+
+/* ── Event row ────────────────────────────────────────────── */
+function EventRow({
+  day,
+  month,
+  title,
+  note,
+  delay,
+}: {
+  day: string;
+  month: string;
+  title: string;
+  note: string;
+  delay: number;
+}) {
+  return (
+    <Rise delay={delay}>
+      <motion.div
+        className="cs-event"
+        whileHover={{ x: 6 }}
+        transition={{ type: "spring", stiffness: 300 }}
+      >
+        <div className="cs-event__date">
+          <span className="cs-event__day">{day}</span>
+          <span className="cs-event__month">{month}</span>
+        </div>
+        <div className="cs-event__body">
+          <div className="cs-event__note">{note}</div>
+          <div className="cs-event__title">{title}</div>
+        </div>
+        <ArrowRight
+          size={16}
+          style={{ color: "var(--ink-20)", flexShrink: 0 }}
+        />
+      </motion.div>
+    </Rise>
+  );
+}
+
+/* ── Page ─────────────────────────────────────────────────── */
+export default function HomePage() {
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
 
   return (
-    <div className="min-h-screen pt-20">
-      {/* Hero Section with Animated Background */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Animated Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-purple-800 to-sky-900">
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-            <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-            <div className="absolute -bottom-8 left-1/3 w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
-          </div>
-        </div>
+    <main style={{ background: "var(--ivory)" }}>
+      {/* ══ HERO ══════════════════════════════════════════════ */}
+      <section ref={heroRef} className="cs-hero cs-hero--full">
+        {/* Parallax background */}
+        <motion.div
+          style={{
+            y: bgY,
+            position: "absolute",
+            inset: "-20% 0 -20%",
+            zIndex: 0,
+          }}
+        >
+          <Image
+            src="/images/choirrr.jpg"
+            alt=""
+            fill
+            style={{ width: "100%", height: "100%" }}
+          />
+          <div className="cs-hero__overlay" />
+        </motion.div>
 
-        {/* Floating Musical Notes */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(8)].map((_, i) => (
-            <Music
-              key={i}
-              className="absolute text-white opacity-10 animate-float"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${i * 0.5}s`,
-                fontSize: `${Math.random() * 30 + 20}px`,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Hero Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div
-            className={`transform transition-all duration-1000 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
+        {/* Floating music notes */}
+        {(["♪", "♫", "♩", "♬"] as const).map((s, i) => (
+          <motion.span
+            key={i}
+            aria-hidden
+            style={{
+              position: "absolute",
+              fontSize: clamp(40 + i * 10, 56 + i * 14),
+              color: "rgba(201,146,42,0.10)",
+              left: `${8 + i * 22}%`,
+              top: `${14 + (i % 2) * 34}%`,
+              fontFamily: "serif",
+              userSelect: "none",
+              pointerEvents: "none",
+            }}
+            animate={{
+              y: [0, -16, 0],
+              rotate: [0, 6, -4, 0],
+              opacity: [0.07, 0.14, 0.07],
+            }}
+            transition={{
+              duration: 7 + i * 1.4,
+              repeat: Infinity,
+              delay: i * 0.8,
+            }}
           >
-            <div className="inline-flex items-center bg-white bg-opacity-10 backdrop-blur-md rounded-full px-6 py-2 mb-6 animate-pulse">
-              <Sparkles className="h-5 w-5 text-sky-300 mr-2" />
-              <span className="text-sky-100 text-sm font-semibold">
+            {s}
+          </motion.span>
+        ))}
+
+        <motion.div
+          style={{
+            y: textY,
+            position: "relative",
+            zIndex: 1,
+            width: "100%",
+            paddingTop: 100,
+          }}
+        >
+          <div className="container">
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              style={{ marginBottom: 32 }}
+            >
+              <span className="badge badge-white">
                 Spreading the Gospel Through Music
               </span>
-            </div>
+            </motion.div>
 
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-              All Things Are Possible to
-              <span className="block bg-gradient-to-r from-sky-300 to-purple-300 bg-clip-text text-transparent animate-gradient">
-                Him Who Believes
-              </span>
-            </h1>
-
-            <p className="text-xl md:text-2xl text-sky-100 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Propagating the Word through excellence in church and choral music
-              using education, performance, composition and advocacy.
-            </p>
-
-            <div className="flex flex-wrap justify-center gap-4">
-              <a
-                href="/get-involved"
-                className="group relative px-8 py-4 bg-gradient-to-r from-sky-500 to-purple-600 text-white rounded-full font-bold text-lg overflow-hidden transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-sky-500/50"
-              >
-                <span className="relative z-10 flex items-center">
-                  Get Involved
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-sky-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-              </a>
-
-              <a
-                href="/about"
-                className="px-8 py-4 bg-opacity-10 backdrop-blur-md text-white border-2 border-white rounded-full font-bold text-lg hover:bg-white hover:text-purple-900 transition-all duration-300 transform hover:scale-105"
-              >
-                Learn More
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white rounded-full mt-2 animate-pulse"></div>
-          </div>
-        </div>
-      </section>
-
-      {/* Vision & Mission with Cards */}
-      <section className="py-20 bg-gradient-to-br from-sky-50 to-purple-50 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-20 left-10 w-64 h-64 bg-purple-500 rounded-full filter blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-64 h-64 bg-sky-500 rounded-full filter blur-3xl"></div>
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-900 to-sky-700 bg-clip-text text-transparent mb-4">
-              Our Vision & Mission
-            </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-sky-500 to-purple-600 mx-auto rounded-full"></div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="group relative bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-sky-400 to-purple-500 rounded-full -mr-16 -mt-16 opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
-              <div className="relative z-10">
-                <div className="inline-block p-4 bg-gradient-to-br from-sky-100 to-purple-100 rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Sparkles className="h-8 w-8 text-purple-700" />
-                </div>
-                <h3 className="text-3xl font-bold text-purple-900 mb-4">
-                  Our Vision
-                </h3>
-                <p className="text-lg text-gray-700 leading-relaxed">
-                  A hymnbook in every Christian&apos;s hands
-                </p>
-              </div>
-            </div>
-
-            <div className="group relative bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-400 to-sky-500 rounded-full -mr-16 -mt-16 opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
-              <div className="relative z-10">
-                <div className="inline-block p-4 bg-gradient-to-br from-purple-100 to-sky-100 rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Heart className="h-8 w-8 text-sky-700" />
-                </div>
-                <h3 className="text-3xl font-bold text-sky-900 mb-4">
-                  Our Mission
-                </h3>
-                <p className="text-lg text-gray-700 leading-relaxed">
-                  To propagate the Word through excellence in church/choral
-                  music using education, performance, composition and advocacy.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Ministries Overview with Hover Effects */}
-      <section className="py-20 bg-white relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-900 to-sky-700 bg-clip-text text-transparent mb-4">
-              Our Ministries
-            </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-sky-500 to-purple-600 mx-auto rounded-full mb-4"></div>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Serving communities across Nigeria through music, worship, and
-              education
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Users,
-                title: "Prison Ministry",
-                description:
-                  "Bringing joy and worship to those in prison through hymns and spiritual fellowship.",
-                gradient: "from-purple-500 to-sky-500",
-              },
-              {
-                icon: Book,
-                title: "School Ministry",
-                description:
-                  "Music education, leadership training, and ABRSM exam preparation for students.",
-                gradient: "from-sky-500 to-purple-500",
-              },
-              {
-                icon: Heart,
-                title: "Health/Social Ministry",
-                description:
-                  "Worship and fellowship with children, families, and elderly in care centers.",
-                gradient: "from-purple-600 to-pink-500",
-              },
-            ].map((ministry, index) => {
-              const Icon = ministry.icon;
-              return (
-                <div
-                  key={index}
-                  className="group relative bg-gradient-to-br from-sky-50 to-purple-50 p-8 rounded-3xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer overflow-hidden"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${ministry.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
-                  ></div>
-
-                  <div className="relative z-10">
-                    <div
-                      className={`inline-block p-4 bg-gradient-to-br ${ministry.gradient} rounded-2xl mb-4 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg`}
-                    >
-                      <Icon className="h-10 w-10 text-white" />
-                    </div>
-
-                    <h3 className="text-2xl font-bold text-purple-900 mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-700 group-hover:to-sky-700 group-hover:bg-clip-text transition-all duration-300">
-                      {ministry.title}
-                    </h3>
-
-                    <p className="text-gray-700 mb-4 leading-relaxed">
-                      {ministry.description}
-                    </p>
-
-                    <a
-                      href="/ministries"
-                      className="inline-flex items-center text-purple-700 font-semibold group-hover:text-sky-700 transition-colors duration-300"
-                    >
-                      Learn More
-                      <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-2 transition-transform duration-300" />
-                    </a>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Quote Section with Beautiful Design */}
-      <section className="py-20 bg-gradient-to-r from-purple-900 via-purple-800 to-sky-900 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute bg-white rounded-full"
+            <motion.h1
+              className="display"
+              initial={{ opacity: 0, y: 56 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.95, delay: 0.3, ease: E }}
               style={{
-                width: `${Math.random() * 4 + 2}px`,
-                height: `${Math.random() * 4 + 2}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animation: `twinkle ${Math.random() * 3 + 2}s infinite ${Math.random() * 2}s`,
+                fontSize: "clamp(2rem, 10vw, 7rem)",
+                color: "#fff",
+                lineHeight: 0.88,
+                maxWidth: 1080,
               }}
-            ></div>
-          ))}
-        </div>
+            >
+              Sing Unto
+              <br />
+              <span style={{ color: "var(--gold)" }}>The Lord</span>
+              <br />
+              <span
+                style={{ color: "rgba(255,255,255,0.65)", fontStyle: "italic" }}
+              >
+                a New Song
+              </span>
+            </motion.h1>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl p-8 md:p-12 border border-white border-opacity-20 shadow-2xl">
-            <Music className="h-16 w-16 text-sky-300 mx-auto mb-6 animate-pulse" />
-            <blockquote className="text-xl md:text-2xl italic mb-6 leading-relaxed">
-              &quot;Holy words long preserved for our walk in this world; they
-              resound with God&apos;s own heart; O let the ancient words
-              impart.&quot;
-            </blockquote>
-            <footer className="text-sky-200 font-semibold">
-              — Lynn DeShazo
-            </footer>
+            <motion.p
+              className="body-text"
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.55, ease: E }}
+              style={{
+                fontSize: "clamp(0.95rem, 1.8vw, 1.15rem)",
+                color: "rgba(255,255,255,0.65)",
+                lineHeight: 1.8,
+                maxWidth: 540,
+                marginTop: 28,
+                marginBottom: 36,
+              }}
+            >
+              Propagating the Word through excellence in church and choral music
+              — education, performance, composition and advocacy across Nigeria.
+            </motion.p>
+
+            <motion.div
+              className="cs-btn-group"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.7, ease: E }}
+            >
+              <motion.a
+                href="/get-involved"
+                className="btn btn-gold"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                Get Involved <ArrowRight size={16} />
+              </motion.a>
+              <motion.a
+                href="/about"
+                className="btn btn-outline-white"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                Our Story
+              </motion.a>
+            </motion.div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ══ WHO WE ARE ════════════════════════════════════════ */}
+      <section style={{ background: "#fff", padding: "var(--sp-2xl) 0" }}>
+        <div className="container">
+          <Rise>
+            <div className="cs-section-header">
+              <hr className="hr-gold" />
+              <Label>Who We Are</Label>
+              <hr className="hr-soft" />
+            </div>
+          </Rise>
+
+          <div className="cs-grid cs-grid--2col">
+            <div>
+              <Rise>
+                <h2
+                  className="display"
+                  style={{
+                    fontSize: "clamp(2rem, 5vw, 5rem)",
+                    color: "var(--viridian)",
+                    lineHeight: 0.9,
+                    marginBottom: 28,
+                  }}
+                >
+                  A Hymnbook
+                  <br />
+                  <em
+                    className="display-i"
+                    style={{ color: "var(--gold-dark)" }}
+                  >
+                    in Every
+                  </em>
+                  <br />
+                  Christian&apos;s Hand
+                </h2>
+              </Rise>
+              <Rise delay={0.1}>
+                <GoldRule />
+                <p
+                  className="body-text"
+                  style={{
+                    fontSize: "clamp(0.95rem,1.5vw,1.1rem)",
+                    color: "var(--ink-70)",
+                    marginBottom: 18,
+                  }}
+                >
+                  ChristianSing Foundation is a not-for-profit organisation
+                  affiliated with the Royal School of Church Music, England —
+                  reviving the use of holy ancient words preserved as hymns.
+                </p>
+                <p
+                  className="body-text"
+                  style={{
+                    color: "var(--ink-45)",
+                    fontSize: "clamp(0.85rem,1.3vw,0.95rem)",
+                    marginBottom: 36,
+                  }}
+                >
+                  We sing and distribute hymnbooks in churches, prisons,
+                  hospitals, hospices and schools — wherever the Word can be
+                  preached.
+                </p>
+              </Rise>
+              <Rise delay={0.18}>
+                <div className="cs-btn-group">
+                  <a href="/about" className="btn btn-viridian">
+                    Learn More <ArrowRight size={16} />
+                  </a>
+                  <a href="/mission" className="btn btn-outline">
+                    Our Mission
+                  </a>
+                </div>
+              </Rise>
+            </div>
+
+            {/* Mosaic */}
+            <Fade delay={0.14}>
+              <div style={{ position: "relative" }}>
+                <div className="cs-mosaic">
+                  <Img
+                    label="Choir rehearsal"
+                    style={{ aspectRatio: "3/4", borderRadius: "var(--r-xl)" }}
+                  />
+                  <Image
+                    src="/images/hymndist.jpg"
+                    alt=""
+                    fill
+                    style={{ aspectRatio: "3/4", borderRadius: "var(--r-xl)" }}
+                  />
+                </div>
+                <motion.div
+                  className="cs-photo-badge"
+                  style={{ bottom: -22, left: -22 }}
+                  initial={{ scale: 0, rotate: -14 }}
+                  whileInView={{ scale: 1, rotate: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.5, type: "spring", stiffness: 180 }}
+                >
+                  <div className="cs-photo-badge__n">100+</div>
+                  <div className="cs-photo-badge__label">Lives Touched</div>
+                </motion.div>
+              </div>
+            </Fade>
           </div>
         </div>
       </section>
 
-      {/* Events Calendar */}
-      <section className="py-20 bg-gradient-to-br from-sky-50 to-purple-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-900 to-sky-700 bg-clip-text text-transparent mb-4">
-              Upcoming Events
-            </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-sky-500 to-purple-600 mx-auto rounded-full"></div>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* ══ STATS ════════════════════════════════════════════ */}
+      <section
+        style={{
+          background: "var(--viridian)",
+          padding: "8px 0",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <Wm
+          text="SING"
+          style={{
+            right: -10,
+            bottom: -20,
+            fontSize: "clamp(100px,18vw,260px)",
+            color: "rgba(255,255,255,0.04)",
+          }}
+        />
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <div className="cs-stats-grid">
             {[
-              {
-                date: "January 26",
-                title: "Thanksgiving Service",
-                subtitle: "4th Sunday in January",
-              },
-              {
-                date: "May 3",
-                title: "Power of His Resurrection",
-                subtitle: "3rd Sunday after Easter",
-              },
-              {
-                date: "September 27",
-                title: "Our Service to God & Nation",
-                subtitle: "Sunday before October 1",
-              },
-              {
-                date: "November 29",
-                title: "The Advent of Our Lord",
-                subtitle: "1st Sunday in Advent",
-              },
-            ].map((event, index) => (
-              <div
-                key={index}
-                className="group bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-t-4 border-purple-500 hover:border-sky-500"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="flex items-center mb-4">
-                  <div className="p-3 bg-gradient-to-br from-sky-100 to-purple-100 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                    <Calendar className="h-6 w-6 text-purple-700" />
-                  </div>
-                  <span className="ml-3 text-sm font-semibold text-gray-600">
-                    {event.date}
-                  </span>
-                </div>
-                <h3 className="font-bold text-purple-900 mb-2 text-lg group-hover:text-sky-700 transition-colors duration-300">
-                  {event.title}
-                </h3>
-                <p className="text-sm text-gray-600">{event.subtitle}</p>
-              </div>
+              { n: "100+", l: "Lives Touched", d: 0 },
+              { n: "11", l: "ABRSM Graduates", d: 0.1 },
+              { n: "3", l: "Active Ministries", d: 0.2 },
+              { n: "∞", l: "Hymns Shared", d: 0.3 },
+            ].map(({ n, l, d }) => (
+              <Stat key={l} n={n} label={l} delay={d} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Stats Section with Animated Counters */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { value: "3", label: "Active Ministries", icon: Heart },
-              { value: "11", label: "ABRSM Graduates (2019)", icon: Award },
-              { value: "100+", label: "Lives Touched", icon: Users },
-              { value: "∞", label: "Hymns Shared", icon: Music },
-            ].map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <div
-                  key={index}
-                  className="text-center group"
-                  style={{ animationDelay: `${index * 100}ms` }}
+      {/* ══ QUOTE ════════════════════════════════════════════ */}
+      <section
+        style={{
+          background: "var(--ivory-2)",
+          padding: "var(--sp-2xl) 0",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <div className="container">
+          <Rise>
+            <Label>Lynn DeShazo</Label>
+            <blockquote
+              className="serif-body"
+              style={{
+                fontSize: "clamp(1.2rem, 3vw, 2.6rem)",
+                color: "var(--viridian)",
+                lineHeight: 1.42,
+                marginBottom: 20,
+                maxWidth: 860,
+              }}
+            >
+              Holy words long preserved for our walk in this world; they resound
+              with God&apos;s own heart — O let the ancient words impart.
+            </blockquote>
+            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <hr className="hr-gold" style={{ margin: 0 }} />
+              <span
+                className="eyebrow"
+                style={{ color: "var(--gold-dark)", whiteSpace: "nowrap" }}
+              >
+                Ancient Words Hymn
+              </span>
+            </div>
+          </Rise>
+        </div>
+      </section>
+
+      {/* ══ MINISTRIES ════════════════════════════════════════ */}
+      <section
+        style={{ background: "var(--ivory)", padding: "var(--sp-2xl) 0" }}
+      >
+        <div className="container">
+          <Rise>
+            <div
+              className="cs-flex--between"
+              style={{ marginBottom: "var(--sp-l)" }}
+            >
+              <div>
+                <Label>Our Work</Label>
+                <h2
+                  className="display"
+                  style={{
+                    fontSize: "clamp(2.4rem, 5.5vw, 5.5rem)",
+                    color: "var(--viridian)",
+                    lineHeight: 0.9,
+                    marginTop: 8,
+                  }}
                 >
-                  <div className="inline-block p-4 bg-gradient-to-br from-sky-100 to-purple-100 rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <Icon className="h-8 w-8 text-purple-700" />
-                  </div>
-                  <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-900 to-sky-700 bg-clip-text text-transparent mb-2">
-                    {stat.value}
-                  </div>
-                  <div className="text-gray-600 font-medium">{stat.label}</div>
-                </div>
-              );
-            })}
+                  Our{" "}
+                  <em
+                    className="display-i"
+                    style={{ color: "var(--gold-dark)" }}
+                  >
+                    Ministries
+                  </em>
+                </h2>
+              </div>
+              <a href="/ministries" className="btn btn-outline">
+                View All <ArrowRight size={14} />
+              </a>
+            </div>
+          </Rise>
+          <div className="cs-grid cs-grid--3col">
+            <MinCard
+              n="01"
+              title="Prison Ministry"
+              imgLabel="Prison ministry worship"
+              tag="Outreach"
+              desc="Bringing worship through hymns to those behind bars — partnering with Lagos churches."
+              delay={0}
+            />
+            <MinCard
+              n="02"
+              title="School Ministry"
+              imgLabel="School music class"
+              tag="Education"
+              desc="ABRSM exam prep, Saturday classes 4–6 PM. 11 graduates in 2019 alone."
+              delay={0.1}
+            />
+            <MinCard
+              n="03"
+              title="Health & Social"
+              imgLabel="Care home visit"
+              tag="Care"
+              desc="Monthly worship at the Cerebral Palsy Centre and Old Peoples Home, Yaba."
+              delay={0.2}
+            />
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-purple-900 via-purple-800 to-sky-900 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-            Join Us in Spreading the Gospel Through Song
-          </h2>
-          <p className="text-xl text-sky-100 mb-8 max-w-2xl mx-auto">
-            Support our mission to bring hymnbooks to churches, prisons,
-            hospitals, and schools across Nigeria.
-          </p>
-          <a
-            href="/get-involved"
-            className="inline-block px-10 py-4 bg-white text-purple-900 rounded-full font-bold text-lg hover:bg-sky-100 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-white/50"
+      {/* ══ EVENTS ════════════════════════════════════════════ */}
+      <section
+        style={{ background: "var(--ivory-2)", padding: "var(--sp-2xl) 0" }}
+      >
+        <div className="container">
+          <div
+            className="cs-grid cs-grid--2col"
+            style={{ alignItems: "start" }}
           >
-            Donate Now
-          </a>
+            <div>
+              <Rise>
+                <Label>Calendar</Label>
+                <h2
+                  className="display"
+                  style={{
+                    fontSize: "clamp(2.2rem, 5vw, 5rem)",
+                    color: "var(--viridian)",
+                    lineHeight: 0.9,
+                    marginTop: 8,
+                    marginBottom: 20,
+                  }}
+                >
+                  Upcoming
+                  <br />
+                  <em
+                    className="display-i"
+                    style={{ color: "var(--gold-dark)" }}
+                  >
+                    Events
+                  </em>
+                </h2>
+                <GoldRule />
+                <p
+                  className="body-text"
+                  style={{
+                    color: "var(--ink-70)",
+                    marginBottom: 36,
+                    fontSize: "clamp(0.88rem,1.4vw,1rem)",
+                  }}
+                >
+                  Celebrating the sacred seasons of the Christian calendar
+                  throughout the year — join us.
+                </p>
+              </Rise>
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: 10 }}
+              >
+                <EventRow
+                  day="26"
+                  month="Jan"
+                  title="Thanksgiving Service"
+                  note="4th Sunday in January"
+                  delay={0.08}
+                />
+                <EventRow
+                  day="03"
+                  month="May"
+                  title="Power of His Resurrection"
+                  note="3rd Sunday after Easter"
+                  delay={0.16}
+                />
+                <EventRow
+                  day="27"
+                  month="Sep"
+                  title="Our Service to God & Nation"
+                  note="Sunday before October 1"
+                  delay={0.24}
+                />
+                <EventRow
+                  day="29"
+                  month="Nov"
+                  title="The Advent of Our Lord"
+                  note="1st Sunday in Advent"
+                  delay={0.32}
+                />
+              </div>
+            </div>
+            {/* Image hidden on tablet/mobile by CSS (events-img) */}
+            <Fade delay={0.14}>
+              <Image
+                src="/images/sing14.jpeg"
+                alt=""
+                width={700}
+                height={700}
+                style={{
+                  width: "100%",
+                  aspectRatio: "3/4",
+                  borderRadius: "var(--r-xl)",
+                }}
+                className="cs-events-img"
+              />
+            </Fade>
+          </div>
         </div>
       </section>
 
-      <style>{`
-        @keyframes blob {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          25% { transform: translate(20px, -50px) scale(1.1); }
-          50% { transform: translate(-20px, 20px) scale(0.9); }
-          75% { transform: translate(50px, 50px) scale(1.05); }
-        }
-        
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(180deg); }
-        }
-        
-        @keyframes gradient {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        
-        @keyframes twinkle {
-          0%, 100% { opacity: 0; }
-          50% { opacity: 1; }
-        }
-        
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-        
-        .animate-gradient {
-          background-size: 200% 200%;
-          animation: gradient 3s ease infinite;
-        }
-        
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
-    </div>
-  );
-};
+      {/* ══ TESTIMONIAL ═══════════════════════════════════════ */}
+      <section
+        style={{
+          background: "var(--viridian-pale)",
+          padding: "var(--sp-2xl) 0",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <Wm
+          text='"'
+          style={{
+            top: -40,
+            left: -10,
+            fontSize: "clamp(120px,20vw,300px)",
+            color: "rgba(26,92,74,0.08)",
+          }}
+        />
+        <div
+          className="container"
+          style={{ position: "relative", zIndex: 1, maxWidth: 860 }}
+        >
+          <Rise>
+            <div style={{ display: "flex", gap: 4, marginBottom: 24 }}>
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  size={20}
+                  style={{ fill: "var(--gold)", color: "var(--gold)" }}
+                />
+              ))}
+            </div>
+            <blockquote className="cs-testimonial__quote">
+              &quot;Seeing the transformation in the inmates&apos; faces as they
+              sang was powerful beyond words. The hymns touched hearts in ways
+              our preaching alone couldn&apos;t reach.&quot;
+            </blockquote>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+                flexWrap: "wrap",
+              }}
+            >
+              <Img
+                label=""
+                style={{
+                  width: 52,
+                  height: 52,
+                  borderRadius: "50%",
+                  flexShrink: 0,
+                }}
+              />
+              <div>
+                <div
+                  className="subhead"
+                  style={{
+                    color: "var(--viridian)",
+                    fontSize: "clamp(0.85rem,1.4vw,0.95rem)",
+                  }}
+                >
+                  Pastor David
+                </div>
+                <div
+                  className="eyebrow"
+                  style={{ color: "var(--ink-45)", marginTop: 2 }}
+                >
+                  All Saints Anglican Church, Yaba
+                </div>
+              </div>
+            </div>
+          </Rise>
+        </div>
+      </section>
 
-export default HomePage;
+      {/* ══ FINAL CTA ═════════════════════════════════════════ */}
+      <section
+        className="cs-cta"
+        style={{ background: "var(--gold)", padding: "var(--sp-2xl) 0" }}
+      >
+        <div className="cs-cta__hatch" />
+        <Wm
+          text="GIVE"
+          style={{
+            right: -10,
+            bottom: -20,
+            fontSize: "clamp(100px,18vw,260px)",
+            color: "rgba(28,25,23,0.06)",
+          }}
+        />
+        <div
+          className="container"
+          style={{
+            position: "relative",
+            zIndex: 1,
+            textAlign: "center",
+            maxWidth: 720,
+          }}
+        >
+          <Rise>
+            <h2 className="cs-cta__title">Join the Mission</h2>
+            <p className="cs-cta__body">
+              Support our mission to bring hymnbooks to churches, prisons,
+              hospitals and schools across Nigeria.
+            </p>
+            <div className="cs-btn-group" style={{ justifyContent: "center" }}>
+              <motion.a
+                href="/get-involved"
+                className="btn btn-viridian"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                Donate Now
+              </motion.a>
+              <motion.a
+                href="/membership"
+                className="btn btn-outline-white"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                Become a Member
+              </motion.a>
+            </div>
+          </Rise>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+/* tiny helper (not React) */
+function clamp(a: number, b: number) {
+  return Math.min(a, b);
+}

@@ -1,397 +1,477 @@
-'use client';
+"use client";
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { ArrowRight, Music, BookOpen, Heart } from "lucide-react";
+import { Check_, Fade, GoldRule, Img, Label, Rise, Wm } from "../components/ui";
+import Image from "next/image";
 
-import React, { useEffect, useState } from 'react';
-import { Users, Book, Heart, Music, Mail, Phone, Award, Sparkles, Calendar, MapPin } from 'lucide-react';
+const E: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-const MinistriesPage: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false);
+const MINISTRIES = [
+  {
+    slug: "prison",
+    label: "Prison Ministry",
+    icon: Music,
+    color: "var(--viridian)",
+    bg: "var(--viridian-pale)",
+    img: "/images/prisson.jpg",
+    imgLabel: "Prison worship service",
+    tag: "Outreach",
+    summary:
+      "Bringing the healing power of hymns and worship to inmates across Lagos prisons — partnering with local Anglican churches.",
+    what: [
+      {
+        t: "Monthly Visits",
+        d: "Regular worship services inside Lagos prison facilities.",
+      },
+      {
+        t: "Hymnbook Distribution",
+        d: "Providing inmates with personal hymnbooks to keep and use.",
+      },
+      {
+        t: "Church Partnership",
+        d: "Collaborating with All Saints Anglican, Yaba and others.",
+      },
+      {
+        t: "Chaplaincy Support",
+        d: "Supporting prison chaplains with music and materials.",
+      },
+    ],
+    checks: [
+      "Monthly worship services in Lagos prisons",
+      "Hymnbooks provided to inmates",
+      "Church partnerships established",
+      "Transformative impact on inmates' lives",
+    ],
+  },
+  {
+    slug: "school",
+    label: "School Ministry",
+    icon: BookOpen,
+    color: "var(--gold-dark)",
+    bg: "var(--gold-light)",
+    img: "/images/schooll.jpg",
+    imgLabel: "Students in music class",
+    tag: "Education",
+    summary:
+      "Equipping young Christians with a love for sacred music through ABRSM-aligned theory and practical lessons every Saturday.",
+    what: [
+      {
+        t: "Saturday Classes",
+        d: "Weekly music lessons 4:00–6:00 PM for all ages and levels.",
+      },
+      {
+        t: "ABRSM Preparation",
+        d: "Theory and practical exam coaching — 11 graduates in 2019.",
+      },
+      {
+        t: "Hymnology",
+        d: "Teaching the history, theology and beauty of Christian hymnody.",
+      },
+      {
+        t: "Choir Training",
+        d: "Developing voices and reading skills for church choirs.",
+      },
+    ],
+    checks: [
+      "11 ABRSM graduates in 2019 alone",
+      "Saturday 4:00–6:00 PM classes",
+      "All ages and experience levels welcome",
+      "Theory and practical training",
+    ],
+  },
+  {
+    slug: "health",
+    label: "Health & Social",
+    icon: Heart,
+    color: "var(--ruby)",
+    bg: "var(--ruby-pale)",
+    img: "/images/elderlycare.jpg",
+    imgLabel: "Singing at care home",
+    tag: "Care",
+    summary:
+      "Monthly worship visits to the Cerebral Palsy Centre and Old Peoples Home in Yaba — bringing joy and comfort through sacred song.",
+    what: [
+      {
+        t: "Cerebral Palsy Centre",
+        d: "Monthly hymn-singing sessions at the centre in Yaba, Lagos.",
+      },
+      {
+        t: "Old Peoples Home",
+        d: "Regular visits to the Old Peoples Home, Yaba.",
+      },
+      {
+        t: "Pastoral Care",
+        d: "Pastoral presence alongside music for those who are isolated.",
+      },
+      {
+        t: "Hospice Support",
+        d: "Bringing comfort to the terminally ill through sacred song.",
+      },
+    ],
+    checks: [
+      "Monthly visits to Cerebral Palsy Centre, Yaba",
+      "Regular worship at Old Peoples Home",
+      "Holistic care combining music and prayer",
+      "Open to volunteers",
+    ],
+  },
+];
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+function MinistryBlock({ m, i }: { m: (typeof MINISTRIES)[0]; i: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const isEven = i % 2 === 0;
 
   return (
-    <div className="min-h-screen pt-24 pb-16">
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-purple-900 via-purple-800 to-sky-900 py-20 overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+    <motion.div
+      ref={ref}
+      className="cs-ministry-block"
+      initial={{ opacity: 0 }}
+      animate={inView ? { opacity: 1 } : {}}
+      transition={{ duration: 0.6, ease: E }}
+    >
+      <div className="cs-grid cs-grid--2col" style={{ alignItems: "center" }}>
+        <div
+          className={isEven ? "cs-ministry-img" : "cs-ministry-img"}
+          style={{ order: isEven ? 1 : 2 }}
+        >
+          <Rise delay={0.1}>
+            <div style={{ position: "relative" }}>
+              <Img
+                label={m.imgLabel}
+                dark
+                style={{
+                  width: "100%",
+                  aspectRatio: "4/3",
+                  borderRadius: "var(--r-xl)",
+                }}
+              />
+              <Image src={m.img} alt={m.imgLabel} fill />
+              <motion.div
+                style={{ position: "absolute", top: 16, left: 16 }}
+                initial={{ scale: 0 }}
+                animate={inView ? { scale: 1 } : {}}
+                transition={{ delay: 0.35, type: "spring", stiffness: 200 }}
+              >
+                <span className="badge badge-viridian">{m.tag}</span>
+              </motion.div>
+            </div>
+          </Rise>
         </div>
 
-        {/* Floating Icons */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[Users, Book, Heart, Music].map((Icon, i) => (
-            <Icon
-              key={i}
-              className="absolute text-white opacity-10 animate-float"
+        {/* Text — always second on mobile */}
+        <div className="cs-ministry-text" style={{ order: isEven ? 2 : 1 }}>
+          <Rise>
+            <div
               style={{
-                left: `${20 + i * 20}%`,
-                top: `${30 + (i % 2) * 40}%`,
-                animationDelay: `${i * 0.7}s`,
-                fontSize: '40px'
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                marginBottom: 20,
+              }}
+            >
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "var(--r-m)",
+                  background: m.bg,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <m.icon size={20} style={{ color: m.color }} />
+              </div>
+              <span className="eyebrow" style={{ color: m.color }}>
+                {m.label}
+              </span>
+            </div>
+            <h2
+              className="display"
+              style={{
+                fontSize: "clamp(2rem,4.5vw,4.5rem)",
+                color: "var(--viridian)",
+                lineHeight: 0.9,
+                marginBottom: 16,
+              }}
+            >
+              {m.label}
+            </h2>
+            <div
+              style={{
+                width: 48,
+                height: 3,
+                background: m.color,
+                borderRadius: 2,
+                marginBottom: 20,
               }}
             />
+            <p
+              className="body-text"
+              style={{
+                color: "var(--ink-70)",
+                fontSize: "clamp(0.9rem,1.5vw,1.05rem)",
+                marginBottom: 28,
+              }}
+            >
+              {m.summary}
+            </p>
+          </Rise>
+
+          {/* What we do cards */}
+          <Rise delay={0.12}>
+            <div
+              className="cs-ministry-block__what-grid"
+              style={{ marginBottom: 28 }}
+            >
+              {m.what.map(({ t, d }) => (
+                <div key={t} className="cs-ministry-block__card">
+                  <div
+                    className="subhead"
+                    style={{
+                      color: "var(--viridian)",
+                      fontSize: "clamp(0.8rem,1.3vw,0.9rem)",
+                      marginBottom: 6,
+                    }}
+                  >
+                    {t}
+                  </div>
+                  <div
+                    className="body-text"
+                    style={{
+                      color: "var(--ink-45)",
+                      fontSize: "clamp(0.75rem,1.1vw,0.82rem)",
+                    }}
+                  >
+                    {d}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Rise>
+
+          <Rise delay={0.18}>
+            {m.checks.map((c) => (
+              <Check_ key={c}>{c}</Check_>
+            ))}
+            <div className="cs-btn-group" style={{ marginTop: 28 }}>
+              <a href="/get-involved" className="btn btn-viridian">
+                Support This Ministry <ArrowRight size={16} />
+              </a>
+              <a href="/contact" className="btn btn-outline">
+                Contact Us
+              </a>
+            </div>
+          </Rise>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+export default function MinistriesPage() {
+  return (
+    <main style={{ background: "var(--ivory)" }}>
+      {/* HERO */}
+      <section
+        className="cs-hero cs-hero--page"
+        style={{ background: "var(--ivory-2)" }}
+      >
+        <Wm
+          text="SERVE"
+          style={{
+            right: -15,
+            top: 0,
+            fontSize: "clamp(100px,20vw,300px)",
+            color: "rgba(26,92,74,0.05)",
+          }}
+        />
+        <div
+          className="container"
+          style={{ position: "relative", zIndex: 1, maxWidth: 820 }}
+        >
+          <motion.span
+            className="eyebrow"
+            style={{
+              color: "var(--gold-dark)",
+              display: "block",
+              marginBottom: 16,
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            What We Do
+          </motion.span>
+          <motion.h1
+            className="display"
+            style={{
+              fontSize: "clamp(3rem,10vw,11rem)",
+              color: "var(--viridian)",
+              lineHeight: 0.88,
+              marginBottom: 24,
+            }}
+            initial={{ opacity: 0, y: 48 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.1, ease: E }}
+          >
+            Our{" "}
+            <em className="display-i" style={{ color: "var(--gold-dark)" }}>
+              Ministries
+            </em>
+          </motion.h1>
+          <motion.p
+            className="body-text"
+            style={{
+              fontSize: "clamp(0.95rem,1.8vw,1.15rem)",
+              color: "var(--ink-70)",
+              maxWidth: 540,
+            }}
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.3, ease: E }}
+          >
+            Three active ministries carrying sacred music into prisons, schools,
+            and care homes across Lagos.
+          </motion.p>
+        </div>
+      </section>
+
+      {/* MINISTRY COUNT BAND */}
+      <section
+        style={{
+          background: "var(--viridian)",
+          padding: "clamp(20px,4vw,32px) 0",
+        }}
+      >
+        <div className="container">
+          <div className="cs-stats-grid">
+            {[
+              { n: "3", l: "Active Ministries" },
+              { n: "100+", l: "Lives Touched" },
+              { n: "11", l: "ABRSM Graduates" },
+              { n: "∞", l: "Songs Sung" },
+            ].map(({ n, l }) => (
+              <div key={l} className="cs-stat">
+                <div className="cs-stat__n">{n}</div>
+                <div className="cs-stat__label">{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* MINISTRY BLOCKS */}
+      <section style={{ background: "#fff", padding: "var(--sp-xl) 0" }}>
+        <div className="container">
+          {MINISTRIES.map((m, i) => (
+            <MinistryBlock key={m.slug} m={m} i={i} />
           ))}
         </div>
+      </section>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className={`transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-            <div className="inline-flex items-center bg-white bg-opacity-10 backdrop-blur-md rounded-full px-6 py-2 mb-6">
-              <Heart className="h-5 w-5 text-sky-300 mr-2 animate-pulse" />
-              <span className="text-sky-100 text-sm font-semibold">Serving Communities</span>
-            </div>
-            
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-              Our Ministries
-            </h1>
-            <p className="text-xl text-sky-100 max-w-2xl mx-auto">
-              Our ministries continue to grow as we strive to obey the great commission
+      {/* PARTNERSHIP */}
+      <section
+        style={{ background: "var(--ivory-2)", padding: "var(--sp-2xl) 0" }}
+      >
+        <div className="container">
+          <div className="cs-partnership-grid">
+            <Rise>
+              <Label>Partner With Us</Label>
+              <h2
+                className="display"
+                style={{
+                  fontSize: "clamp(2rem,5vw,5rem)",
+                  color: "var(--viridian)",
+                  lineHeight: 0.9,
+                  marginTop: 10,
+                  marginBottom: 22,
+                }}
+              >
+                Could Your Church
+                <br />
+                <em className="display-i" style={{ color: "var(--gold-dark)" }}>
+                  Join the Mission?
+                </em>
+              </h2>
+              <GoldRule />
+              <p
+                className="body-text"
+                style={{
+                  color: "var(--ink-70)",
+                  fontSize: "clamp(0.9rem,1.5vw,1.05rem)",
+                  marginBottom: 32,
+                }}
+              >
+                We actively partner with churches across Lagos for prison
+                visits, hymnbook distributions and outreach events. If your
+                church wants to be involved, we would love to hear from you.
+              </p>
+              <div className="cs-btn-group">
+                <a href="/contact" className="btn btn-viridian">
+                  Get in Touch <ArrowRight size={16} />
+                </a>
+                <a href="/get-involved" className="btn btn-outline">
+                  Donate
+                </a>
+              </div>
+            </Rise>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section
+        className="cs-cta"
+        style={{ background: "var(--gold)", padding: "var(--sp-xl) 0" }}
+      >
+        <Wm
+          text="GO"
+          style={{
+            right: -10,
+            bottom: -20,
+            fontSize: "clamp(100px,18vw,260px)",
+            color: "rgba(255,255,255,0.08)",
+          }}
+        />
+        <div
+          className="container"
+          style={{
+            position: "relative",
+            zIndex: 1,
+            textAlign: "center",
+            maxWidth: 640,
+          }}
+        >
+          <Rise>
+            <h2 className="cs-cta__title">Support Our Ministries</h2>
+            <p className="cs-cta__body">
+              Your donation keeps hymnbooks in prisons, students in Saturday
+              classes, and singers visiting care homes.
             </p>
-          </div>
+            <div className="cs-btn-group" style={{ justifyContent: "center" }}>
+              <motion.a
+                href="/get-involved"
+                className="btn btn-viridian"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                Donate Now
+              </motion.a>
+              <motion.a
+                href="/membership"
+                className="btn btn-outline-white"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                Become a Member
+              </motion.a>
+            </div>
+          </Rise>
         </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10">
-        <div className="space-y-12">
-          {/* Prison Ministry */}
-          <div className="group bg-white rounded-3xl shadow-2xl overflow-hidden transform hover:scale-[1.02] transition-all duration-500">
-            <div className="relative bg-gradient-to-r from-purple-600 to-sky-600 text-white p-8 overflow-hidden">
-              <div className="absolute right-0 top-0 w-64 h-64 bg-white opacity-10 rounded-full -mr-32 -mt-32 group-hover:scale-150 transition-transform duration-700"></div>
-              <div className="relative z-10 flex items-center">
-                <div className="p-4 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                  <Users className="h-10 w-10" />
-                </div>
-                <div className="ml-4">
-                  <h2 className="text-3xl md:text-4xl font-bold">The Prison Ministry</h2>
-                  <p className="text-sky-100 mt-1">Bringing hope through hymns</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="p-8">
-              <p className="text-gray-700 mb-6 text-lg leading-relaxed">
-                We visited the Lord&apos;s people in prison. Oh! What joy to hear them sing loftily from the SSS hymn books. In 2019, we partnered with All Saints Anglican Church, Yaba, Cathedral Church of Christ, Marina, Lagos and Our Saviours Church, Tafawa Balewa Square, Lagos. We are grateful to God for the opportunity to bring joy to His people.
-              </p>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-gradient-to-br from-purple-50 to-sky-50 p-6 rounded-2xl border-l-4 border-purple-500 transform hover:scale-105 transition-all duration-300">
-                  <h4 className="font-bold text-purple-900 mb-4 text-lg flex items-center">
-                    <Sparkles className="h-5 w-5 mr-2" />
-                    What We Do
-                  </h4>
-                  <ul className="space-y-3">
-                    {[
-                      "Distribute hymnbooks to prison facilities",
-                      "Lead worship services with inmates",
-                      "Provide spiritual encouragement through music",
-                      "Partner with local churches for outreach"
-                    ].map((item, index) => (
-                      <li key={index} className="flex items-start group/item">
-                        <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-purple-500 to-sky-500 rounded-full flex items-center justify-center mr-3 group-hover/item:scale-110 transition-transform duration-300">
-                          <span className="text-white text-xs font-bold">✓</span>
-                        </div>
-                        <span className="text-gray-700 pt-0.5">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-2xl border-l-4 border-green-500 transform hover:scale-105 transition-all duration-300">
-                  <h4 className="font-bold text-green-900 mb-4 text-lg flex items-center">
-                    <MapPin className="h-5 w-5 mr-2" />
-                    2019 Partnerships
-                  </h4>
-                  <ul className="space-y-3">
-                    {[
-                      "All Saints Anglican Church, Yaba",
-                      "Cathedral Church of Christ, Marina",
-                      "Our Saviours Church, Tafawa Balewa Square"
-                    ].map((item, index) => (
-                      <li key={index} className="flex items-start group/item">
-                        <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center mr-3 group-hover/item:scale-110 transition-transform duration-300">
-                          <span className="text-white text-xs">•</span>
-                        </div>
-                        <span className="text-gray-700 pt-0.5">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* School Ministry */}
-          <div className="group bg-white rounded-3xl shadow-2xl overflow-hidden transform hover:scale-[1.02] transition-all duration-500">
-            <div className="relative bg-gradient-to-r from-sky-600 to-purple-600 text-white p-8 overflow-hidden">
-              <div className="absolute right-0 top-0 w-64 h-64 bg-white opacity-10 rounded-full -mr-32 -mt-32 group-hover:scale-150 transition-transform duration-700"></div>
-              <div className="relative z-10 flex items-center">
-                <div className="p-4 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300">
-                  <Book className="h-10 w-10" />
-                </div>
-                <div className="ml-4">
-                  <h2 className="text-3xl md:text-4xl font-bold">School Ministry</h2>
-                  <p className="text-sky-100 mt-1">Nurturing young talents</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="p-8">
-              <p className="text-gray-700 mb-6 text-lg leading-relaxed">
-                We sing and distribute hymns in one school each quarter. We offer music and leadership/grooming classes on Saturdays 4-6pm. 11 of our students passed the ABRSM exams in 2019. We are presenting six students for the ABRSM exams in March 2020.
-              </p>
-              
-              <div className="grid md:grid-cols-2 gap-6 mb-6">
-                <div className="bg-gradient-to-br from-sky-50 to-purple-50 p-6 rounded-2xl border-l-4 border-sky-500 transform hover:scale-105 transition-all duration-300">
-                  <h4 className="font-bold text-sky-900 mb-4 text-lg flex items-center">
-                    <Book className="h-5 w-5 mr-2" />
-                    Programs Offered
-                  </h4>
-                  <ul className="space-y-3">
-                    {[
-                      "Music theory and practice classes",
-                      "ABRSM exam preparation",
-                      "Leadership and grooming classes",
-                      "Saturday classes: 4-6pm",
-                      "Quarterly school visits with hymn distribution"
-                    ].map((item, index) => (
-                      <li key={index} className="flex items-start group/item">
-                        <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-sky-500 to-purple-500 rounded-full flex items-center justify-center mr-3 group-hover/item:scale-110 transition-transform duration-300">
-                          <span className="text-white text-xs font-bold">✓</span>
-                        </div>
-                        <span className="text-gray-700 pt-0.5">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                <div className="bg-gradient-to-br from-yellow-50 to-orange-50 p-6 rounded-2xl border-l-4 border-yellow-500 transform hover:scale-105 transition-all duration-300">
-                  <h4 className="font-bold text-yellow-900 mb-4 text-lg flex items-center">
-                    <Award className="h-5 w-5 mr-2" />
-                    Achievements
-                  </h4>
-                  <div className="space-y-4">
-                    <div className="bg-white p-4 rounded-xl shadow-sm">
-                      <p className="font-semibold text-gray-900 mb-1">2019 Results</p>
-                      <p className="text-gray-700">11 students successfully passed ABRSM exams</p>
-                    </div>
-                    <div className="bg-white p-4 rounded-xl shadow-sm">
-                      <p className="font-semibold text-gray-900 mb-1">2020 Candidates</p>
-                      <p className="text-gray-700">6 students preparing for March 2020 exams</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-r from-sky-500 to-purple-600 text-white p-4 rounded-2xl text-center shadow-lg transform hover:scale-105 transition-all duration-300">
-                <Calendar className="h-6 w-6 inline-block mr-2" />
-                <span className="font-semibold">Class Schedule: Saturdays, 4:00 PM - 6:00 PM</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Health/Social Ministry */}
-          <div className="group bg-white rounded-3xl shadow-2xl overflow-hidden transform hover:scale-[1.02] transition-all duration-500">
-            <div className="relative bg-gradient-to-r from-purple-700 to-pink-600 text-white p-8 overflow-hidden">
-              <div className="absolute right-0 top-0 w-64 h-64 bg-white opacity-10 rounded-full -mr-32 -mt-32 group-hover:scale-150 transition-transform duration-700"></div>
-              <div className="relative z-10 flex items-center">
-                <div className="p-4 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                  <Heart className="h-10 w-10 animate-pulse" />
-                </div>
-                <div className="ml-4">
-                  <h2 className="text-3xl md:text-4xl font-bold">Health/Social Ministry</h2>
-                  <p className="text-purple-100 mt-1">Caring through music and fellowship</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="p-8">
-              <p className="text-gray-700 mb-6 text-lg leading-relaxed">
-                We worship with the children, their families, and the care givers at the Cerebral Palsy Centre on the last Sunday of every month. We also fellowship with the old people at the Old Peoples Home in Yaba, Lagos. We are working with other homes to bring them succour.
-              </p>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-2xl border-l-4 border-purple-500 transform hover:scale-105 transition-all duration-300">
-                  <h4 className="font-bold text-purple-900 mb-4 text-lg flex items-center">
-                    <Heart className="h-5 w-5 mr-2" />
-                    Ministry Activities
-                  </h4>
-                  <ul className="space-y-3">
-                    {[
-                      "Monthly worship at Cerebral Palsy Centre",
-                      "Fellowship at Old Peoples Home, Yaba",
-                      "Music therapy and spiritual support",
-                      "Expanding partnerships with care facilities",
-                      "Bringing comfort through hymns and psalms"
-                    ].map((item, index) => (
-                      <li key={index} className="flex items-start group/item">
-                        <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-3 group-hover/item:scale-110 transition-transform duration-300">
-                          <span className="text-white text-xs font-bold">✓</span>
-                        </div>
-                        <span className="text-gray-700 pt-0.5">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-2xl border-l-4 border-indigo-500 transform hover:scale-105 transition-all duration-300">
-                  <h4 className="font-bold text-indigo-900 mb-4 text-lg flex items-center">
-                    <Calendar className="h-5 w-5 mr-2" />
-                    Regular Schedule
-                  </h4>
-                  <div className="space-y-4">
-                    <div className="bg-white p-4 rounded-xl shadow-sm">
-                      <p className="font-semibold text-gray-900">Cerebral Palsy Centre</p>
-                      <p className="text-sm text-gray-600">Last Sunday of every month</p>
-                    </div>
-                    <div className="bg-white p-4 rounded-xl shadow-sm">
-                      <p className="font-semibold text-gray-900">Old Peoples Home, Yaba</p>
-                      <p className="text-sm text-gray-600">Regular fellowship visits</p>
-                    </div>
-                    <div className="bg-gradient-to-r from-indigo-100 to-purple-100 p-4 rounded-xl">
-                      <p className="text-sm italic text-gray-700">We are actively expanding to partner with more care facilities across Lagos</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* The Choir */}
-          <div className="group bg-white rounded-3xl shadow-2xl overflow-hidden transform hover:scale-[1.02] transition-all duration-500">
-            <div className="relative bg-gradient-to-r from-sky-700 to-purple-700 text-white p-8 overflow-hidden">
-              <div className="absolute right-0 top-0 w-64 h-64 bg-white opacity-10 rounded-full -mr-32 -mt-32 group-hover:scale-150 transition-transform duration-700"></div>
-              <div className="relative z-10 flex items-center">
-                <div className="p-4 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300">
-                  <Music className="h-10 w-10" />
-                </div>
-                <div className="ml-4">
-                  <h2 className="text-3xl md:text-4xl font-bold">The Choir</h2>
-                  <p className="text-sky-100 mt-1">Developing talents to serve</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="p-8">
-              <p className="text-gray-700 mb-6 text-lg leading-relaxed">
-                We develop the various talents that the Lord has imbued in us. Our Choristers learn the theory and practice of good singing. Our choristers learn to give as they lead the other ministries.
-              </p>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-gradient-to-br from-sky-50 to-purple-50 p-6 rounded-2xl border-l-4 border-sky-500 transform hover:scale-105 transition-all duration-300">
-                  <h4 className="font-bold text-sky-900 mb-4 text-lg flex items-center">
-                    <Music className="h-5 w-5 mr-2" />
-                    Training Focus
-                  </h4>
-                  <ul className="space-y-3">
-                    {[
-                      "Vocal technique and musicianship",
-                      "Music theory fundamentals",
-                      "Worship leading skills",
-                      "Performance practice and stage presence",
-                      "Sacred music repertoire"
-                    ].map((item, index) => (
-                      <li key={index} className="flex items-start group/item">
-                        <span className="text-sky-600 mr-3 text-xl group-hover/item:scale-125 transition-transform duration-300">♪</span>
-                        <span className="text-gray-700 pt-1">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                <div className="bg-gradient-to-br from-purple-50 to-sky-50 p-6 rounded-2xl border-l-4 border-purple-500 transform hover:scale-105 transition-all duration-300">
-                  <h4 className="font-bold text-purple-900 mb-4 text-lg flex items-center">
-                    <Sparkles className="h-5 w-5 mr-2" />
-                    Service Opportunities
-                  </h4>
-                  <ul className="space-y-3">
-                    {[
-                      "Leading prison ministry worship",
-                      "Performing at school events",
-                      "Ministering at care facilities",
-                      "Church service participation",
-                      "Community outreach programs"
-                    ].map((item, index) => (
-                      <li key={index} className="flex items-start group/item">
-                        <span className="text-purple-600 mr-3 text-xl group-hover/item:scale-125 transition-transform duration-300">♪</span>
-                        <span className="text-gray-700 pt-1">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Partnership CTA */}
-        <div className="mt-16 relative bg-gradient-to-br from-purple-900 via-purple-800 to-sky-900 rounded-3xl shadow-2xl p-8 md:p-12 overflow-hidden">
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute w-64 h-64 bg-sky-400 rounded-full filter blur-3xl animate-blob"></div>
-            <div className="absolute w-64 h-64 bg-purple-400 rounded-full filter blur-3xl animate-blob animation-delay-2000 right-0 bottom-0"></div>
-          </div>
-
-          <div className="relative z-10 text-center">
-            <Sparkles className="h-16 w-16 text-sky-300 mx-auto mb-6 animate-pulse" />
-            <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Partner With Us
-            </h3>
-            <p className="text-xl text-sky-100 mb-8 max-w-2xl mx-auto">
-              If your church or parish desires to host any of our programmes, or wishes to collaborate with us in any of our ministries, please get in touch with us.
-            </p>
-            
-            <div className="flex flex-col md:flex-row justify-center items-center gap-6 mb-8">
-              <a href="mailto:info@christiansingfoundation.org" className="flex items-center text-white hover:text-sky-300 transition-colors duration-300 bg-white bg-opacity-10 backdrop-blur-sm px-6 py-3 rounded-full">
-                <Mail className="h-5 w-5 mr-2" />
-                <span>info@christiansingfoundation.org</span>
-              </a>
-              <div className="flex items-center text-white bg-white bg-opacity-10 backdrop-blur-sm px-6 py-3 rounded-full">
-                <Phone className="h-5 w-5 mr-2" />
-                <div className="flex gap-2">
-                  <a href="tel:+2348035390860" className="hover:text-sky-300 transition-colors duration-300">08035390860</a>
-                  <span>|</span>
-                  <a href="tel:+2348032006518" className="hover:text-sky-300 transition-colors duration-300">08032006518</a>
-                </div>
-              </div>
-            </div>
-
-            <a
-              href="/contact"
-              className="inline-block px-10 py-4 bg-white text-purple-900 rounded-full font-bold hover:bg-sky-100 transition-all duration-300 transform hover:scale-105 shadow-2xl"
-            >
-              Contact Us Today
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <style>{`
-        @keyframes blob {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          25% { transform: translate(20px, -50px) scale(1.1); }
-          50% { transform: translate(-20px, 20px) scale(0.9); }
-          75% { transform: translate(50px, 50px) scale(1.05); }
-        }
-        
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(180deg); }
-        }
-        
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-        
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-      `}</style>
-    </div>
+      </section>
+    </main>
   );
-};
-
-export default MinistriesPage;
+}

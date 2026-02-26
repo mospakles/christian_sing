@@ -1,453 +1,588 @@
 "use client";
+// ─── RESPONSIVE CONTACT PAGE ────────────────────────────────────
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
+  ArrowRight,
+  CheckCircle,
+  ChevronDown,
   Mail,
   Phone,
   MapPin,
-  Send,
   Clock,
-  Facebook,
-  Twitter,
-  Instagram,
-  Youtube,
-  Sparkles,
-  MessageCircle,
 } from "lucide-react";
+import {
+  Wm,
+  Rise,
+  Label,
+  GoldRule,
+  FieldLabel,
+  FieldErr,
+} from "../components/ui";
 
-const ContactPage: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [fullName, setFullName] = useState("");
+const E: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+const FAQS = [
+  {
+    q: "When do your Saturday classes run?",
+    a: "Classes run every Saturday from 4:00 PM to 6:00 PM. They are open to all ages and levels of musical experience.",
+  },
+  {
+    q: "How can I join the ChristianSing choir?",
+    a: "Contact us via the form on this page or call us directly. We hold open choir sessions and would love to welcome you.",
+  },
+  {
+    q: "Can my church partner with you for prison ministry?",
+    a: "Yes — we actively seek church partnerships for our prison ministry. Please get in touch and we'll arrange a conversation.",
+  },
+  {
+    q: "How do I donate hymnbooks to a specific institution?",
+    a: "Contact us with the name and location of the institution. We'll advise on how to arrange a targeted hymnbook donation.",
+  },
+  {
+    q: "Are you affiliated with any denomination?",
+    a: "ChristianSing Foundation is non-denominational. We are affiliated with the Royal School of Church Music, England, and welcome Christians from all traditions.",
+  },
+];
+
+const INFO = [
+  {
+    Icon: Mail,
+    label: "Email",
+    value: "info@christiansingfoundation.org",
+    href: "mailto:info@christiansingfoundation.org",
+  },
+  {
+    Icon: Phone,
+    label: "Phone",
+    value: "08035390860 / 08032006518",
+    href: "tel:+2348035390860",
+  },
+  { Icon: MapPin, label: "Location", value: "Lagos, Nigeria", href: "#" },
+  {
+    Icon: Clock,
+    label: "Classes",
+    value: "Saturday 4:00 – 6:00 PM",
+    href: "#",
+  },
+];
+
+function FAQ({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="cs-faq">
+      <button className="cs-faq__btn" onClick={() => setOpen(!open)}>
+        <span className="cs-faq__q">{q}</span>
+        <motion.div
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.25 }}
+          style={{ flexShrink: 0 }}
+        >
+          <ChevronDown size={18} style={{ color: "var(--gold)" }} />
+        </motion.div>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: E }}
+            style={{ overflow: "hidden" }}
+          >
+            <p className="cs-faq__a">{a}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+export function ContactPage() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
-  const [inquiryType, setInquiryType] = useState("");
+  const [tried, setTried] = useState(false);
+  const [done, setDone] = useState(false);
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
-
-  const inquiryTypes = [
-    "General Inquiry",
-    "Partnership Opportunity",
-    "Volunteer Application",
-    "Donation Question",
-    "Event Hosting",
-    "Membership Information",
-    "Media/Press",
-    "Other",
-  ];
-
-  const handleSubmit = () => {
-    console.log("Contact form submission:", {
-      fullName,
-      email,
-      phone,
-      subject,
-      message,
-      inquiryType,
-    });
-    alert("Thank you for contacting us! We will respond within 24-48 hours.");
-    setFullName("");
-    setEmail("");
-    setPhone("");
-    setSubject("");
-    setMessage("");
-    setInquiryType("");
+  const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+  const errs = {
+    name: !name.trim() ? "Full name is required" : "",
+    email: !isEmail(email) ? "A valid email is required" : "",
+    message: !message.trim() ? "Please enter your message" : "",
   };
+  const allOk = !Object.values(errs).some(Boolean);
+  const cls = (key: keyof typeof errs, val: string) => {
+    if (tried && errs[key]) return "field error";
+    if (val) return "field valid";
+    return "field";
+  };
+  function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setTried(true);
+    if (allOk) setDone(true);
+  }
 
   return (
-    <div className="min-h-screen pt-24 pb-16">
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-purple-900 via-purple-800 to-sky-900 py-20 overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-          <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
-        </div>
-
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div
-            className={`transform transition-all duration-1000 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
+    <main style={{ background: "var(--ivory)" }}>
+      {/* HERO */}
+      <section
+        className="cs-hero cs-hero--page"
+        style={{ background: "var(--ivory-2)" }}
+      >
+        <Wm
+          text="CONTACT"
+          style={{
+            right: -20,
+            top: 0,
+            fontSize: "clamp(80px,16vw,260px)",
+            color: "rgba(26,92,74,0.05)",
+          }}
+        />
+        <div
+          className="container"
+          style={{ position: "relative", zIndex: 1, maxWidth: 860 }}
+        >
+          <motion.span
+            className="eyebrow"
+            style={{
+              color: "var(--gold-dark)",
+              display: "block",
+              marginBottom: 16,
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
           >
-            <div className="inline-flex items-center bg-white bg-opacity-10 backdrop-blur-md rounded-full px-6 py-2 mb-6">
-              <MessageCircle className="h-5 w-5 text-sky-300 mr-2 animate-pulse" />
-              <span className="text-sky-100 text-sm font-semibold">
-                Get in Touch
-              </span>
-            </div>
-
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-              Contact Us
-            </h1>
-            <p className="text-xl text-sky-100 max-w-2xl mx-auto">
-              We'd love to hear from you. Get in touch with us today!
-            </p>
-          </div>
+            Get in Touch
+          </motion.span>
+          <motion.h1
+            className="display"
+            style={{
+              fontSize: "clamp(3rem, 10vw, 11rem)",
+              color: "var(--viridian)",
+              lineHeight: 0.88,
+              marginBottom: 24,
+            }}
+            initial={{ opacity: 0, y: 48 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.1, ease: E }}
+          >
+            Contact{" "}
+            <em className="display-i" style={{ color: "var(--gold-dark)" }}>
+              Us
+            </em>
+          </motion.h1>
+          <motion.p
+            className="body-text"
+            style={{
+              fontSize: "clamp(0.95rem,1.8vw,1.15rem)",
+              color: "var(--ink-70)",
+              maxWidth: 520,
+            }}
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.3, ease: E }}
+          >
+            We&apos;d love to hear from you — whether you want to join, partner,
+            donate, or simply find out more.
+          </motion.p>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10">
-        <div className="grid lg:grid-cols-3 gap-8 mb-12">
-          {/* Contact Information Cards */}
-          <div className="lg:col-span-1 space-y-6">
-            {/* Email Card */}
-            <div className="group bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 p-6 transform hover:-translate-y-2">
-              <div className="flex items-start">
-                <div className="p-4 bg-gradient-to-br from-purple-100 to-sky-100 rounded-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                  <Mail className="h-6 w-6 text-purple-700" />
-                </div>
-                <div className="ml-4 flex-1">
-                  <h3 className="font-bold text-purple-900 mb-2 text-lg">
-                    Email Us
-                  </h3>
-                  <a
-                    href="mailto:info@christiansingfoundation.org"
-                    className="text-gray-700 hover:text-purple-700 transition-colors break-all"
-                  >
-                    info@christiansingfoundation.org
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Phone Card */}
-            <div className="group bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 p-6 transform hover:-translate-y-2">
-              <div className="flex items-start">
-                <div className="p-4 bg-gradient-to-br from-sky-100 to-purple-100 rounded-2xl group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300">
-                  <Phone className="h-6 w-6 text-sky-700" />
-                </div>
-                <div className="ml-4 flex-1">
-                  <h3 className="font-bold text-sky-900 mb-2 text-lg">
-                    Call Us
-                  </h3>
-                  <div className="space-y-1">
-                    <a
-                      href="tel:+2348035390860"
-                      className="block text-gray-700 hover:text-sky-700 transition-colors"
-                    >
-                      +234 803 539 0860
-                    </a>
-                    <a
-                      href="tel:+2348032006518"
-                      className="block text-gray-700 hover:text-sky-700 transition-colors"
-                    >
-                      +234 803 200 6518
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Location Card */}
-            <div className="group bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 p-6 transform hover:-translate-y-2">
-              <div className="flex items-start">
-                <div className="p-4 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                  <MapPin className="h-6 w-6 text-purple-700" />
-                </div>
-                <div className="ml-4 flex-1">
-                  <h3 className="font-bold text-purple-900 mb-2 text-lg">
-                    Visit Us
-                  </h3>
-                  <p className="text-gray-700">Lagos, Nigeria</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Office Hours Card */}
-            <div className="group bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 p-6 transform hover:-translate-y-2">
-              <div className="flex items-start">
-                <div className="p-4 bg-gradient-to-br from-sky-100 to-purple-100 rounded-2xl group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300">
-                  <Clock className="h-6 w-6 text-sky-700" />
-                </div>
-                <div className="ml-4 flex-1">
-                  <h3 className="font-bold text-sky-900 mb-2 text-lg">
-                    Office Hours
-                  </h3>
-                  <div className="text-gray-700 space-y-1 text-sm">
-                    <p>Saturday Classes: 4:00 PM - 6:00 PM</p>
-                    <p>Email Response: Within 24-48 hours</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Social Media Card */}
-            <div className="relative bg-gradient-to-br from-purple-600 to-sky-600 rounded-3xl shadow-2xl p-6 overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-16 -mt-16"></div>
-              <div className="relative z-10">
-                <h3 className="font-bold text-white mb-4 text-lg">Follow Us</h3>
-                <div className="flex space-x-3">
-                  {[
-                    {
-                      Icon: Facebook,
-                      href: "https://facebook.com",
-                      color: "hover:bg-sky-600",
-                    },
-                    {
-                      Icon: Twitter,
-                      href: "https://twitter.com",
-                      color: "hover:bg-sky-500",
-                    },
-                    {
-                      Icon: Instagram,
-                      href: "https://instagram.com",
-                      color: "hover:bg-purple-600",
-                    },
-                    {
-                      Icon: Youtube,
-                      href: "https://youtube.com",
-                      color: "hover:bg-red-600",
-                    },
-                  ].map(({ Icon, href, color }) => (
-                    <a
-                      key={href}
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`bg-white bg-opacity-20 backdrop-blur-sm p-3 rounded-xl ${color} transition-all duration-300 transform hover:scale-110 hover:-rotate-6`}
-                    >
-                      <Icon className="h-6 w-6 text-white" />
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Contact Form */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-              <div className="bg-gradient-to-r from-purple-600 to-sky-600 p-8 relative overflow-hidden">
-                <div className="absolute right-0 top-0 w-64 h-64 bg-white opacity-10 rounded-full -mr-32 -mt-32"></div>
-                <div className="relative z-10 flex items-center">
-                  <div className="p-4 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl">
-                    <Send className="h-8 w-8 text-white" />
-                  </div>
-                  <h2 className="text-3xl font-bold text-white ml-4">
-                    Send Us a Message
-                  </h2>
-                </div>
-              </div>
-
-              <div className="p-8 md:p-12 space-y-6">
-                {/* Inquiry Type */}
-                <div>
-                  <label
-                    htmlFor="inquiryType"
-                    className="block text-sm font-bold text-gray-700 mb-2"
-                  >
-                    Type of Inquiry *
-                  </label>
-                  <select
-                    id="inquiryType"
-                    value={inquiryType}
-                    onChange={(e) => setInquiryType(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300"
-                  >
-                    <option value="">Select an option</option>
-                    {inquiryTypes.map((type) => (
-                      <option key={type} value={type}>
-                        {type}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Name and Email */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label
-                      htmlFor="fullName"
-                      className="block text-sm font-bold text-gray-700 mb-2"
-                    >
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="fullName"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300"
-                      placeholder="Your full name"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-bold text-gray-700 mb-2"
-                    >
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-sky-200 focus:border-sky-500 transition-all duration-300"
-                      placeholder="your.email@example.com"
-                    />
-                  </div>
-                </div>
-
-                {/* Phone and Subject */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label
-                      htmlFor="phone"
-                      className="block text-sm font-bold text-gray-700 mb-2"
-                    >
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300"
-                      placeholder="+234 xxx xxx xxxx"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="subject"
-                      className="block text-sm font-bold text-gray-700 mb-2"
-                    >
-                      Subject *
-                    </label>
-                    <input
-                      type="text"
-                      id="subject"
-                      value={subject}
-                      onChange={(e) => setSubject(e.target.value)}
-                      required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-sky-200 focus:border-sky-500 transition-all duration-300"
-                      placeholder="Brief subject"
-                    />
-                  </div>
-                </div>
-
-                {/* Message */}
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="block text-sm font-bold text-gray-700 mb-2"
-                  >
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    required
-                    rows={6}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300"
-                    placeholder="Tell us how we can help you..."
-                  />
-                </div>
-
-                {/* Submit Button */}
-                <button
-                  onClick={handleSubmit}
-                  disabled={
-                    !fullName || !email || !subject || !message || !inquiryType
-                  }
-                  className="w-full bg-gradient-to-r from-purple-600 to-sky-600 text-white py-4 rounded-2xl font-bold text-lg hover:from-purple-700 hover:to-sky-700 transition-all duration-300 transform hover:scale-[1.02] shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none group"
+      {/* INFO CARDS */}
+      <section style={{ background: "#fff", padding: "var(--sp-xl) 0" }}>
+        <div className="container">
+          <div className="cs-grid cs-grid--info">
+            {INFO.map(({ Icon, label, value, href }, i) => (
+              <Rise key={label} delay={i * 0.1}>
+                <motion.a
+                  href={href}
+                  className="cs-info-card"
+                  whileHover={{ y: -6 }}
+                  transition={{ type: "spring", stiffness: 260 }}
                 >
-                  <span className="flex items-center justify-center">
-                    <Send className="mr-2 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />
-                    Send Message
-                  </span>
-                </button>
-
-                <p className="text-sm text-gray-600 text-center">
-                  ⏱️ We typically respond within 24-48 hours
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Links */}
-        <div className="bg-gradient-to-br from-sky-50 to-purple-50 rounded-3xl p-8 md:p-12 shadow-xl">
-          <h3 className="text-3xl font-bold bg-gradient-to-r from-purple-900 to-sky-700 bg-clip-text text-transparent mb-8 text-center">
-            Looking for Something Specific?
-          </h3>
-          <div className="grid md:grid-cols-4 gap-6">
-            {[
-              {
-                title: "Donate",
-                desc: "Support our mission",
-                href: "/get-involved",
-                gradient: "from-purple-500 to-pink-500",
-              },
-              {
-                title: "Membership",
-                desc: "Join our community",
-                href: "/membership",
-                gradient: "from-sky-500 to-purple-500",
-              },
-              {
-                title: "Ministries",
-                desc: "Learn about our work",
-                href: "/ministries",
-                gradient: "from-purple-600 to-sky-600",
-              },
-              {
-                title: "Blog",
-                desc: "Read our stories",
-                href: "/blog",
-                gradient: "from-sky-600 to-purple-700",
-              },
-            ].map((link, index) => (
-              <a
-                key={index}
-                href={link.href}
-                className="group bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 text-center"
-              >
-                <div
-                  className={`inline-block p-4 bg-gradient-to-br ${link.gradient} rounded-2xl mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}
-                >
-                  <Sparkles className="h-8 w-8 text-white" />
-                </div>
-                <h4 className="font-bold text-purple-900 mb-2 text-lg">
-                  {link.title}
-                </h4>
-                <p className="text-sm text-gray-600">{link.desc}</p>
-              </a>
+                  <div className="cs-info-card__icon">
+                    <Icon size={20} style={{ color: "var(--viridian)" }} />
+                  </div>
+                  <div className="cs-info-card__label">{label}</div>
+                  <div className="cs-info-card__value">{value}</div>
+                </motion.a>
+              </Rise>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      <style>{`
-        @keyframes blob {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          25% { transform: translate(20px, -50px) scale(1.1); }
-          50% { transform: translate(-20px, 20px) scale(0.9); }
-          75% { transform: translate(50px, 50px) scale(1.05); }
-        }
-        
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
-    </div>
+      {/* FORM + FAQ */}
+      <section
+        style={{ background: "var(--ivory-2)", padding: "var(--sp-xl) 0" }}
+      >
+        <div className="container">
+          <div className="cs-grid cs-grid--2col">
+            {/* Form */}
+            <Rise>
+              <Label>Send a Message</Label>
+              <h2
+                className="display"
+                style={{
+                  fontSize: "clamp(2rem,4.5vw,4.5rem)",
+                  color: "var(--viridian)",
+                  lineHeight: 0.9,
+                  marginTop: 10,
+                  marginBottom: 24,
+                }}
+              >
+                Write to{" "}
+                <em className="display-i" style={{ color: "var(--gold-dark)" }}>
+                  Us
+                </em>
+              </h2>
+              <GoldRule />
+              <div
+                style={{
+                  background: "#fff",
+                  borderRadius: "var(--r-xl)",
+                  border: "1.5px solid var(--ink-08)",
+                  overflow: "hidden",
+                  boxShadow: "0 8px 40px rgba(26,92,74,0.07)",
+                }}
+              >
+                <div
+                  style={{
+                    background:
+                      "linear-gradient(135deg, var(--viridian) 0%, var(--viridian-mid) 100%)",
+                    padding: "24px 32px",
+                  }}
+                >
+                  <div className="eyebrow" style={{ color: "var(--gold)" }}>
+                    Contact Form
+                  </div>
+                </div>
+                <AnimatePresence mode="wait">
+                  {done ? (
+                    <motion.div
+                      key="done"
+                      initial={{ opacity: 0, scale: 0.96 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5, ease: E }}
+                      style={{
+                        padding: "clamp(36px,7vw,56px) clamp(24px,5vw,32px)",
+                        textAlign: "center",
+                      }}
+                    >
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{
+                          delay: 0.15,
+                          type: "spring",
+                          stiffness: 200,
+                        }}
+                        style={{
+                          width: 72,
+                          height: 72,
+                          borderRadius: "50%",
+                          background: "var(--viridian-pale)",
+                          border: "2px solid var(--viridian)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          margin: "0 auto 24px",
+                        }}
+                      >
+                        <CheckCircle
+                          size={36}
+                          style={{ color: "var(--viridian)" }}
+                        />
+                      </motion.div>
+                      <h4
+                        className="heading"
+                        style={{
+                          fontSize: "clamp(1.4rem,3vw,1.8rem)",
+                          color: "var(--viridian)",
+                          marginBottom: 12,
+                        }}
+                      >
+                        Message Sent!
+                      </h4>
+                      <p
+                        className="body-text"
+                        style={{ color: "var(--ink-45)" }}
+                      >
+                        Thank you, {name}. We&apos;ll reply to {email} within 48
+                        hours.
+                      </p>
+                    </motion.div>
+                  ) : (
+                    <motion.form
+                      key="form"
+                      onSubmit={submit}
+                      style={{
+                        padding: "clamp(20px,4vw,28px) clamp(20px,5vw,32px)",
+                      }}
+                      noValidate
+                    >
+                      <div
+                        className="cs-form-grid"
+                        style={{ marginBottom: 16 }}
+                      >
+                        <div>
+                          <FieldLabel required>Full Name</FieldLabel>
+                          <input
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Your name"
+                            className={cls("name", name)}
+                          />
+                          <FieldErr msg={tried ? errs.name : ""} />
+                        </div>
+                        <div>
+                          <FieldLabel>Phone</FieldLabel>
+                          <input
+                            type="tel"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            placeholder="+234 xxx xxx xxxx"
+                            className="field"
+                          />
+                        </div>
+                      </div>
+                      <div style={{ marginBottom: 16 }}>
+                        <FieldLabel required>Email Address</FieldLabel>
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="your@email.com"
+                          className={cls("email", email)}
+                        />
+                        <FieldErr msg={tried ? errs.email : ""} />
+                      </div>
+                      <div style={{ marginBottom: 16 }}>
+                        <FieldLabel>Subject</FieldLabel>
+                        <input
+                          type="text"
+                          value={subject}
+                          onChange={(e) => setSubject(e.target.value)}
+                          placeholder="What is your message about?"
+                          className="field"
+                        />
+                      </div>
+                      <div style={{ marginBottom: 24 }}>
+                        <FieldLabel required>Message</FieldLabel>
+                        <textarea
+                          value={message}
+                          onChange={(e) => setMessage(e.target.value)}
+                          rows={5}
+                          placeholder="Your message…"
+                          className={cls("message", message)}
+                        />
+                        <FieldErr msg={tried ? errs.message : ""} />
+                      </div>
+                      <motion.button
+                        type="submit"
+                        whileHover={allOk ? { scale: 1.03 } : {}}
+                        whileTap={allOk ? { scale: 0.97 } : {}}
+                        className={allOk ? "btn btn-viridian" : "btn"}
+                        style={{
+                          width: "100%",
+                          justifyContent: "center",
+                          opacity: allOk ? 1 : 0.4,
+                          cursor: allOk ? "pointer" : "not-allowed",
+                          background: allOk ? undefined : "var(--ink-08)",
+                          color: allOk ? undefined : "var(--ink-20)",
+                        }}
+                      >
+                        Send Message <ArrowRight size={16} />
+                      </motion.button>
+                      <p
+                        style={{
+                          textAlign: "center",
+                          color: "var(--ink-20)",
+                          fontSize: "0.75rem",
+                          marginTop: 14,
+                        }}
+                      >
+                        We aim to reply within 48 hours
+                      </p>
+                    </motion.form>
+                  )}
+                </AnimatePresence>
+              </div>
+            </Rise>
+
+            {/* FAQ */}
+            <div>
+              <Rise delay={0.12}>
+                <Label>FAQ</Label>
+                <h2
+                  className="display"
+                  style={{
+                    fontSize: "clamp(2rem,4.5vw,4.5rem)",
+                    color: "var(--viridian)",
+                    lineHeight: 0.9,
+                    marginTop: 10,
+                    marginBottom: 24,
+                  }}
+                >
+                  Common{" "}
+                  <em
+                    className="display-i"
+                    style={{ color: "var(--gold-dark)" }}
+                  >
+                    Questions
+                  </em>
+                </h2>
+                <GoldRule />
+                <div>
+                  {FAQS.map(({ q, a }) => (
+                    <FAQ key={q} q={q} a={a} />
+                  ))}
+                </div>
+              </Rise>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* LOCATION */}
+      <section
+        style={{
+          background: "var(--viridian)",
+          padding: "var(--sp-xl) 0",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <Wm
+          text="LAGOS"
+          style={{
+            right: -10,
+            bottom: -20,
+            fontSize: "clamp(100px,18vw,260px)",
+            color: "rgba(255,255,255,0.04)",
+          }}
+        />
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <div className="cs-grid cs-grid--2col">
+            <Rise>
+              <span
+                className="eyebrow"
+                style={{
+                  color: "var(--gold)",
+                  display: "block",
+                  marginBottom: 14,
+                }}
+              >
+                Find Us
+              </span>
+              <h2
+                className="display"
+                style={{
+                  fontSize: "clamp(2.2rem,5vw,5rem)",
+                  color: "#fff",
+                  lineHeight: 0.9,
+                  marginBottom: 24,
+                }}
+              >
+                We&apos;re Based in{" "}
+                <em className="display-i" style={{ color: "var(--gold)" }}>
+                  Lagos
+                </em>
+              </h2>
+              <p
+                className="body-text"
+                style={{
+                  color: "rgba(255,255,255,0.65)",
+                  fontSize: "clamp(0.88rem,1.4vw,1.05rem)",
+                  marginBottom: 36,
+                }}
+              >
+                Our Saturday classes and rehearsals are held in Lagos. Contact
+                us directly for the exact venue address before attending.
+              </p>
+              <div className="cs-btn-group">
+                <a
+                  href="mailto:info@christiansingfoundation.org"
+                  className="btn btn-gold"
+                >
+                  Email Us
+                </a>
+                <a href="tel:+2348035390860" className="btn btn-outline-white">
+                  Call Us
+                </a>
+              </div>
+            </Rise>
+            <Rise delay={0.12}>
+              <div className="cs-glass">
+                {INFO.map(({ Icon, label, value, href }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 14,
+                      marginBottom: 22,
+                      paddingBottom: 22,
+                      borderBottom: "1px solid rgba(255,255,255,0.07)",
+                      textDecoration: "none",
+                    }}
+                    onMouseEnter={(e) =>
+                      ((e.currentTarget as HTMLElement).style.opacity = "0.8")
+                    }
+                    onMouseLeave={(e) =>
+                      ((e.currentTarget as HTMLElement).style.opacity = "1")
+                    }
+                  >
+                    <div
+                      style={{
+                        width: 36,
+                        height: 36,
+                        minWidth: 36,
+                        borderRadius: "var(--r-s)",
+                        background: "rgba(201,146,42,0.18)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Icon size={16} style={{ color: "var(--gold)" }} />
+                    </div>
+                    <div>
+                      <div
+                        className="eyebrow"
+                        style={{
+                          color: "rgba(255,255,255,0.45)",
+                          marginBottom: 4,
+                        }}
+                      >
+                        {label}
+                      </div>
+                      <div
+                        className="subhead"
+                        style={{
+                          color: "#fff",
+                          fontSize: "clamp(0.8rem,1.3vw,0.9rem)",
+                          lineHeight: 1.45,
+                        }}
+                      >
+                        {value}
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </Rise>
+          </div>
+        </div>
+      </section>
+    </main>
   );
-};
+}
 
 export default ContactPage;

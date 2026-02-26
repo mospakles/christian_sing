@@ -1,267 +1,546 @@
 "use client";
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import { Check_, Fade, GoldRule, Label, Rise, Wm } from "../components/ui";
+import Image from "next/image";
 
-import React, { useEffect, useState } from "react";
-import { Music, Heart, BookOpen, Users, Sparkles, Award } from "lucide-react";
+const E: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-const AboutPage: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
-
+function VerseCard({
+  verse,
+  src,
+  i,
+}: {
+  verse: string;
+  src: string;
+  i: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
   return (
-    <div className="min-h-screen pt-24 pb-16">
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-purple-900 via-purple-800 to-sky-900 py-20 overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-        </div>
-
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div
-            className={`transform transition-all duration-1000 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
-          >
-            <div className="inline-flex items-center bg-white bg-opacity-10 backdrop-blur-md rounded-full px-6 py-2 mb-6">
-              <Sparkles className="h-5 w-5 text-sky-300 mr-2" />
-              <span className="text-sky-100 text-sm font-semibold">
-                Our Story
-              </span>
-            </div>
-
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-              About ChristianSing Foundation
-            </h1>
-            <p className="text-xl text-sky-100">
-              Reviving the use of holy ancient words preserved as hymns
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10">
-        {/* Main Content Card */}
-        <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 mb-12 transform hover:scale-[1.01] transition-transform duration-300">
-          <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-            ChristianSing is registered as a not-for-profit organisation. We are
-            affiliated with the Royal School of Church Music, England. We obey
-            the last commission &quot;go ye&quot;. We revive the use of the holy
-            ancient words preserved as hymns.
-          </p>
-
-          {/* Animated Quote Box */}
-          <div className="relative bg-gradient-to-br from-sky-50 to-purple-50 p-8 rounded-2xl mb-8 border-l-4 border-purple-600 overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-sky-400 to-purple-500 rounded-full -mr-16 -mt-16 opacity-10 group-hover:scale-150 transition-transform duration-500"></div>
-
-            <div className="relative z-10 space-y-4 italic text-gray-800">
-              <p className="transform hover:translate-x-2 transition-transform duration-300">
-                Holy words long preserved for our walk in this world; they
-                resound with God&apos;s own heart; O let the ancient words
-                impart.
-              </p>
-              <p className="transform hover:translate-x-2 transition-transform duration-300">
-                Holy words of our faith handed down to this age, came to us
-                through sacrifice, O heed the faithful words of Christ.
-              </p>
-              <p className="transform hover:translate-x-2 transition-transform duration-300">
-                Words of life, words of hope, give us strength, help us cope, in
-                this world, where e&apos;er we roam; Ancient words will guide us
-                home.
-              </p>
-              <p className="transform hover:translate-x-2 transition-transform duration-300">
-                Ancient words ever true, changing me and changing you; We have
-                come with open hearts, Oh, let the ancient words impart.
-              </p>
-              <p className="text-right text-sm font-semibold text-purple-900 not-italic mt-4">
-                — Lynn DeShazo
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Value of Church Music */}
-        <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 mb-12 overflow-hidden group">
-          <div className="flex items-center mb-6">
-            <div className="p-4 bg-gradient-to-br from-sky-100 to-purple-100 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-              <Music className="h-8 w-8 text-purple-700" />
-            </div>
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-900 to-sky-700 bg-clip-text text-transparent ml-4">
-              The Value of Good Church Music
-            </h2>
-          </div>
-
-          <p className="text-gray-700 mb-6 leading-relaxed">
-            The value of good church music cannot be over emphasised; it
-            transforms the worship and life of all who worship Him with hymns
-            and psalms.
-          </p>
-
-          <div className="space-y-4">
-            {[
-              "Good church music draws people into the heart of worship",
-              "Good music sustains, challenges and inspires our worship",
-              "Music is at the heart of evangelism",
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="flex items-start group/item hover:bg-gradient-to-r hover:from-sky-50 hover:to-purple-50 p-4 rounded-xl transition-all duration-300 transform hover:translate-x-2"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-sky-500 to-purple-600 rounded-full flex items-center justify-center mr-4 group-hover/item:scale-110 transition-transform duration-300">
-                  <Sparkles className="h-4 w-4 text-white" />
-                </div>
-                <span className="text-gray-700 pt-1">{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Our Commitment */}
-        <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 mb-12 overflow-hidden group">
-          <div className="flex items-center mb-6">
-            <div className="p-4 bg-gradient-to-br from-purple-100 to-sky-100 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-              <Heart className="h-8 w-8 text-sky-700 animate-pulse" />
-            </div>
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-sky-700 to-purple-900 bg-clip-text text-transparent ml-4">
-              Our Commitment
-            </h2>
-          </div>
-
-          <p className="text-gray-700 mb-6 leading-relaxed">
-            We propagate and spread the gospel of Christ through singing.
-          </p>
-
-          <div className="bg-gradient-to-br from-sky-50 to-purple-50 p-6 rounded-2xl mb-6 border-l-4 border-sky-600">
-            <p className="text-gray-800 italic leading-relaxed">
-              We will sing, we will pray. We will witness everyday; That the
-              millions of the whole wide world, May know our Saviour&apos;s
-              love.
-            </p>
-          </div>
-
-          <p className="text-gray-700 leading-relaxed">
-            To this end we sing, and we distribute hymnbooks in churches,
-            prisons, hospitals, hospices and schools, wherever the Word can be
-            preached. We bring succour to His flock, through hymns and psalms.
-            We admonish our souls with good inspired music.
-          </p>
-        </div>
-
-        {/* Join Us Section */}
-        <div className="relative bg-gradient-to-br from-purple-900 via-purple-800 to-sky-900 rounded-3xl shadow-2xl p-8 md:p-12 mb-12 overflow-hidden">
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute w-64 h-64 bg-sky-400 rounded-full filter blur-3xl animate-blob"></div>
-            <div className="absolute w-64 h-64 bg-purple-400 rounded-full filter blur-3xl animate-blob animation-delay-2000 right-0 bottom-0"></div>
-          </div>
-
-          <div className="relative z-10">
-            <div className="flex items-center mb-6">
-              <Users className="h-8 w-8 text-sky-300 mr-3" />
-              <h2 className="text-3xl font-bold text-white">Join Us Today</h2>
-            </div>
-
-            <p className="text-sky-00 mb-6">We invite you to:</p>
-
-            <div className="space-y-3 mb-8">
-              {[
-                "Join us and support our mission",
-                "Own your own hymnbooks and use them",
-                "Sing if you know the tunes, read the words if you don't",
-                "Give hymnbooks as gifts",
-                "Pray for His kingdom on earth",
-                "Join our prison, school and health ministries",
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-start group/item bg-white bg-opacity-10 backdrop-blur-sm p-4 rounded-xl hover:bg-opacity-20 transition-all duration-300 transform hover:translate-x-2"
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
-                  <div className="flex-shrink-0 w-6 h-6 bg-sky-400 rounded-full flex items-center justify-center mr-3 group-hover/item:scale-110 transition-transform duration-300">
-                    <span className="text-purple-900 font-bold text-sm">✓</span>
-                  </div>
-                  <span className=" pt-0.5">{item}</span>
-                </div>
-              ))}
-            </div>
-
-            <a
-              href="/membership"
-              className="inline-block px-8 py-4 bg-white text-purple-900 rounded-full font-bold hover:bg-sky-100 transition-all duration-300 transform hover:scale-105 shadow-2xl"
-            >
-              Become a Member
-            </a>
-          </div>
-        </div>
-
-        {/* Affiliation */}
-        <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 mb-12 overflow-hidden group">
-          <div className="flex items-center mb-6">
-            <div className="p-4 bg-gradient-to-br from-sky-100 to-purple-100 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-              <Award className="h-8 w-8 text-purple-700" />
-            </div>
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-900 to-sky-700 bg-clip-text text-transparent ml-4">
-              Our Affiliation
-            </h2>
-          </div>
-
-          <p className="text-gray-700 mb-6 leading-relaxed">
-            We are proud to be affiliated with the Royal School of Church Music,
-            England, one of the world&apos;s leading organizations dedicated to
-            the promotion of church music excellence.
-          </p>
-
-          <p className="text-gray-700 leading-relaxed">
-            This affiliation ensures that our programs meet international
-            standards while maintaining our unique focus on serving Nigerian
-            communities through music and worship.
-          </p>
-        </div>
-
-        {/* CTA */}
-        <div className="text-center">
-          <h3 className="text-3xl font-bold bg-gradient-to-r from-purple-900 to-sky-700 bg-clip-text text-transparent mb-4">
-            Ready to Make a Difference?
-          </h3>
-          <p className="text-gray-700 mb-8 text-lg">
-            Support our mission today and help us spread the love of Christ
-            through music
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <a
-              href="/get-involved"
-              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-sky-600 text-white rounded-full font-bold hover:from-purple-700 hover:to-sky-700 transition-all duration-300 transform hover:scale-105 shadow-xl"
-            >
-              Get Involved
-            </a>
-            <a
-              href="/contact"
-              className="px-8 py-4 bg-white border-2 border-purple-600 text-purple-900 rounded-full font-bold hover:bg-purple-50 transition-all duration-300 transform hover:scale-105"
-            >
-              Contact Us
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <style>{`
-        @keyframes blob {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          25% { transform: translate(20px, -50px) scale(1.1); }
-          50% { transform: translate(-20px, 20px) scale(0.9); }
-          75% { transform: translate(50px, 50px) scale(1.05); }
-        }
-        
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-      `}</style>
-    </div>
+    <motion.div
+      ref={ref}
+      className="cs-verse"
+      initial={{ opacity: 0, y: 28 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.65, delay: i * 0.1, ease: E }}
+    >
+      <div className="cs-verse__q">&quot;</div>
+      <p className="cs-verse__text">{verse}</p>
+      <div className="cs-verse__src">— {src}</div>
+    </motion.div>
   );
-};
+}
 
-export default AboutPage;
+export default function AboutPage() {
+  return (
+    <main style={{ background: "var(--ivory)" }}>
+      {/* HERO */}
+      <section
+        className="cs-hero cs-hero--page-flush"
+        style={{ background: "var(--viridian)" }}
+      >
+        <Wm
+          text="ABOUT"
+          style={{
+            right: -15,
+            top: 0,
+            fontSize: "clamp(100px,22vw,340px)",
+            color: "rgba(255,255,255,0.04)",
+          }}
+        />
+        <div
+          className="container"
+          style={{ position: "relative", zIndex: 1, width: "100%" }}
+        >
+          <div
+            className="cs-grid cs-grid--2col-asym"
+            style={{ alignItems: "flex-end" }}
+          >
+            <div style={{ paddingBottom: "var(--sp-xl)" }}>
+              <motion.span
+                className="eyebrow"
+                style={{
+                  color: "var(--gold)",
+                  display: "block",
+                  marginBottom: 16,
+                }}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                Our Story
+              </motion.span>
+              <motion.h1
+                className="display"
+                style={{
+                  fontSize: "clamp(2rem,8vw,7rem)",
+                  color: "#fff",
+                  lineHeight: 0.88,
+                  marginBottom: 28,
+                }}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, delay: 0.1, ease: E }}
+              >
+                About
+                <br />
+                <em className="display-i" style={{ color: "var(--gold)" }}>
+                  Christian
+                </em>
+                <br />
+                Sing
+              </motion.h1>
+              <motion.p
+                className="body-text"
+                style={{
+                  fontSize: "clamp(0.92rem,1.6vw,1.1rem)",
+                  color: "rgba(255,255,255,0.65)",
+                  maxWidth: 460,
+                  marginBottom: 36,
+                }}
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.65, delay: 0.3, ease: E }}
+              >
+                A not-for-profit foundation reviving holy ancient words
+                preserved as hymns — in churches, prisons, hospitals and
+                schools.
+              </motion.p>
+              <motion.div
+                className="cs-btn-group"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.45 }}
+              >
+                <a href="/mission" className="btn btn-gold">
+                  Our Mission <ArrowRight size={16} />
+                </a>
+                <a href="/get-involved" className="btn btn-outline-white">
+                  Get Involved
+                </a>
+              </motion.div>
+            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.2, ease: E }}
+            >
+              <Image
+                src="/images/musiclesson.jpg"
+                alt=""
+                width={600}
+                height={600}
+              />
+              {/* <div
+                className="img-fill img-dark cs-about-hero-img"
+                style={{
+                  width: "100%",
+                  aspectRatio: "4/5",
+                  borderRadius: "var(--r-xl) var(--r-xl) 0 0",
+                  position: "relative",
+                }}
+              >
+                <span>Choir performing in worship</span>
+
+                <motion.div
+                  style={{
+                    position: "absolute",
+                    bottom: -1,
+                    right: -1,
+                    padding: "clamp(10px,2vw,14px) clamp(12px,2.5vw,18px)",
+                    background: "#fff",
+                    borderRadius:
+                      "var(--r-l) var(--r-xs) var(--r-xs) var(--r-xs)",
+                    border: "1.5px solid var(--ink-08)",
+                  }}
+                  initial={{ scale: 0, rotate: 8 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ delay: 0.7, type: "spring", stiffness: 180 }}
+                >
+                  <div
+                    className="eyebrow"
+                    style={{ color: "var(--gold)", marginBottom: 4 }}
+                  >
+                    Affiliated With
+                  </div>
+                  <div
+                    className="heading"
+                    style={{
+                      fontSize: "clamp(0.78rem,1.3vw,0.95rem)",
+                      color: "var(--viridian)",
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    Royal School of
+                    <br />
+                    Church Music
+                  </div>
+                </motion.div>
+              </div> */}
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* FOUNDATION STORY */}
+      <section style={{ background: "#fff", padding: "var(--sp-2xl) 0" }}>
+        <div className="container">
+          <Rise>
+            <div className="cs-section-header">
+              <hr className="hr-gold" />
+              <Label>The Foundation</Label>
+              <hr className="hr-soft" />
+            </div>
+          </Rise>
+          <div className="cs-grid cs-grid--2col">
+            <Fade delay={0.1}>
+              <div className="cs-about-mosaic">
+                <Image
+                  src="/images/hymndist.jpg"
+                  alt="Hymn"
+                  width={700}
+                  height={700}
+                  style={{ aspectRatio: "1", borderRadius: "var(--r-l)" }}
+                />
+              </div>
+            </Fade>
+            <div>
+              <Rise>
+                <h2
+                  className="display"
+                  style={{
+                    fontSize: "clamp(2.2rem,5vw,5rem)",
+                    color: "var(--viridian)",
+                    lineHeight: 0.9,
+                    marginBottom: 24,
+                  }}
+                >
+                  Not for profit.
+                  <br />
+                  <em
+                    className="display-i"
+                    style={{ color: "var(--gold-dark)" }}
+                  >
+                    Not for silence.
+                  </em>
+                </h2>
+                <GoldRule />
+              </Rise>
+              <Rise delay={0.1}>
+                <p
+                  className="body-text"
+                  style={{
+                    color: "var(--ink-70)",
+                    fontSize: "clamp(0.92rem,1.5vw,1.05rem)",
+                    marginBottom: 18,
+                  }}
+                >
+                  ChristianSing is affiliated with the Royal School of Church
+                  Music, England. We obey the last commission &quot;go ye&quot;,
+                  reviving holy ancient words preserved as hymns.
+                </p>
+                <p
+                  className="body-text"
+                  style={{
+                    color: "var(--ink-45)",
+                    fontSize: "clamp(0.82rem,1.3vw,0.95rem)",
+                    marginBottom: 32,
+                  }}
+                >
+                  We sing and distribute hymnbooks in churches, prisons,
+                  hospitals, hospices and schools — bringing succour through
+                  hymns and psalms.
+                </p>
+              </Rise>
+              <Rise delay={0.18}>
+                <Check_>
+                  Affiliated with the Royal School of Church Music, England
+                </Check_>
+                <Check_>
+                  Active prison, school and health ministries in Lagos
+                </Check_>
+                <Check_>
+                  Saturday music classes and ABRSM exam preparation
+                </Check_>
+                <Check_>
+                  Hymnbook distribution to churches, prisons and hospitals
+                </Check_>
+              </Rise>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* QUOTE BAND */}
+      <section
+        style={{
+          background: "var(--viridian)",
+          padding: "var(--sp-xl) 0",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <Wm
+          text="WORD"
+          style={{
+            right: 0,
+            top: -10,
+            fontSize: "clamp(100px,18vw,260px)",
+            color: "rgba(255,255,255,0.04)",
+          }}
+        />
+        <div
+          className="container"
+          style={{ position: "relative", zIndex: 1, maxWidth: 820 }}
+        >
+          <div
+            className="display"
+            style={{
+              fontSize: "clamp(2.5rem,6vw,4rem)",
+              lineHeight: 0.7,
+              color: "var(--gold)",
+              opacity: 0.5,
+              marginBottom: 20,
+            }}
+          >
+            &quot;
+          </div>
+          <Rise>
+            <blockquote
+              className="serif-body"
+              style={{
+                fontSize: "clamp(1.1rem,2.8vw,2.2rem)",
+                color: "#fff",
+                lineHeight: 1.5,
+                marginBottom: 20,
+              }}
+            >
+              The value of good church music cannot be overemphasised — it
+              transforms the worship and life of all who seek Him.
+            </blockquote>
+            <div className="eyebrow" style={{ color: "var(--gold)" }}>
+              — ChristianSing Foundation
+            </div>
+          </Rise>
+        </div>
+      </section>
+
+      {/* HYMN VERSES */}
+      <section
+        style={{ background: "var(--ivory-2)", padding: "var(--sp-2xl) 0" }}
+      >
+        <div className="container">
+          <div style={{ textAlign: "center", marginBottom: "var(--sp-l)" }}>
+            <Rise>
+              <Label>Ancient Words</Label>
+              <h2
+                className="display"
+                style={{
+                  fontSize: "clamp(2.2rem,5vw,5rem)",
+                  color: "var(--viridian)",
+                  lineHeight: 0.9,
+                  marginTop: 10,
+                }}
+              >
+                The Hymn{" "}
+                <em className="display-i" style={{ color: "var(--gold-dark)" }}>
+                  That Guides Us
+                </em>
+              </h2>
+            </Rise>
+          </div>
+          <div className="cs-grid cs-grid--vm" style={{ gap: "var(--gap-m)" }}>
+            <VerseCard
+              verse="Holy words long preserved for our walk in this world; they resound with God's own heart; O let the ancient words impart."
+              src="Lynn DeShazo, v.1"
+              i={0}
+            />
+            <VerseCard
+              verse="Holy words of our faith handed down to this age, came to us through sacrifice; O heed the faithful words of Christ."
+              src="Lynn DeShazo, v.2"
+              i={1}
+            />
+            <VerseCard
+              verse="Words of life, words of hope, give us strength, help us cope, in this world, where e'er we roam; Ancient words will guide us home."
+              src="Lynn DeShazo, v.3"
+              i={2}
+            />
+            <VerseCard
+              verse="Ancient words ever true, changing me and changing you; We have come with open hearts; Oh, let the ancient words impart."
+              src="Lynn DeShazo, v.4"
+              i={3}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* VALUE OF MUSIC */}
+      <section style={{ background: "#fff", padding: "var(--sp-2xl) 0" }}>
+        <div className="container">
+          <div className="cs-grid cs-grid--2col">
+            <div>
+              <Rise>
+                <Label>Why It Matters</Label>
+                <h2
+                  className="display"
+                  style={{
+                    fontSize: "clamp(2rem,4.5vw,4.5rem)",
+                    color: "var(--viridian)",
+                    lineHeight: 0.9,
+                    marginTop: 10,
+                    marginBottom: 22,
+                  }}
+                >
+                  The Value of Good
+                  <br />
+                  <em
+                    className="display-i"
+                    style={{ color: "var(--gold-dark)" }}
+                  >
+                    Church Music
+                  </em>
+                </h2>
+                <GoldRule />
+                <p
+                  className="body-text"
+                  style={{
+                    color: "var(--ink-70)",
+                    fontSize: "clamp(0.92rem,1.5vw,1.05rem)",
+                    marginBottom: 28,
+                  }}
+                >
+                  The value of good church music cannot be overemphasised; it
+                  transforms the worship and life of all who worship Him with
+                  hymns and psalms.
+                </p>
+              </Rise>
+              <Rise delay={0.1}>
+                {[
+                  {
+                    t: "Draws People In",
+                    d: "Good church music draws people into the heart of worship, creating sacred space for encounter with God.",
+                  },
+                  {
+                    t: "Sustains & Inspires",
+                    d: "It sustains, challenges and inspires worship beyond what words alone can achieve.",
+                  },
+                  {
+                    t: "Heart of Evangelism",
+                    d: "Music reaches souls that preaching alone may not touch — in prisons, hospitals and care homes.",
+                  },
+                ].map(({ t, d }, i) => (
+                  <motion.div
+                    key={t}
+                    initial={{ opacity: 0, x: -14 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.1 + i * 0.08, ease: E }}
+                    style={{
+                      display: "flex",
+                      gap: 14,
+                      padding: "clamp(12px,2vw,16px) clamp(14px,2.5vw,18px)",
+                      borderRadius: "var(--r-m)",
+                      border: "1.5px solid var(--ink-08)",
+                      background: "var(--ivory-2)",
+                      marginBottom: 12,
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 3,
+                        flexShrink: 0,
+                        background: "var(--gold)",
+                        borderRadius: 2,
+                      }}
+                    />
+                    <div>
+                      <div
+                        className="subhead"
+                        style={{
+                          color: "var(--viridian)",
+                          fontSize: "clamp(0.85rem,1.4vw,0.95rem)",
+                          marginBottom: 4,
+                        }}
+                      >
+                        {t}
+                      </div>
+                      <div
+                        className="body-text"
+                        style={{
+                          color: "var(--ink-45)",
+                          fontSize: "clamp(0.78rem,1.2vw,0.88rem)",
+                        }}
+                      >
+                        {d}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </Rise>
+            </div>
+            <Fade delay={0.1}>
+              <Image
+                src="/images/sing18.jpeg"
+                alt="Choir"
+                width={700}
+                height={700}
+                style={{
+                  aspectRatio: "1",
+                  borderRadius: "var(--r-l)",
+                  marginTop: "clamp(20px,4vw,40px)",
+                }}
+              />
+            </Fade>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section
+        className="cs-cta"
+        style={{ background: "var(--gold)", padding: "var(--sp-2xl) 0" }}
+      >
+        <Wm
+          text="JOIN"
+          style={{
+            right: -10,
+            bottom: -20,
+            fontSize: "clamp(100px,18vw,260px)",
+            color: "rgba(255,255,255,0.08)",
+          }}
+        />
+        <div
+          className="container"
+          style={{
+            position: "relative",
+            zIndex: 1,
+            textAlign: "center",
+            maxWidth: 680,
+          }}
+        >
+          <Rise>
+            <h2
+              className="cs-cta__title"
+              style={{ fontSize: "clamp(2.4rem,7vw,6.5rem)" }}
+            >
+              Join Us Today
+            </h2>
+            <p className="cs-cta__body">
+              Be part of something eternal — spreading the love of Christ
+              through sacred music.
+            </p>
+            <div className="cs-btn-group cs-btn-group--center">
+              <a href="/membership" className="btn btn-viridian">
+                Become a Member
+              </a>
+              <a href="/contact" className="btn btn-outline-white">
+                Contact Us
+              </a>
+            </div>
+          </Rise>
+        </div>
+      </section>
+    </main>
+  );
+}

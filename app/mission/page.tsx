@@ -1,291 +1,600 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import {
-  Target,
-  GraduationCap,
-  Music2,
-  Feather,
-  Megaphone,
-  Sparkles,
   ArrowRight,
+  Eye,
+  Target,
+  Flame,
+  Globe,
+  BookOpen,
+  Music,
+  Sparkles,
+  Heart,
 } from "lucide-react";
+import { Img, Rise, Label, GoldRule, Fade, Wm } from "../components/ui";
 
-const MissionPage: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false);
+const E: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+const PILLARS = [
+  {
+    n: "01",
+    Icon: Music,
+    title: "Education",
+    accent: "var(--viridian)",
+    desc: "Equipping singers and musicians from beginners to ABRSM-level with theory and practice of sacred music.",
+  },
+  {
+    n: "02",
+    Icon: Sparkles,
+    title: "Performance",
+    accent: "var(--gold-dark)",
+    desc: "Taking worship into prisons, schools, hospitals and care homes — wherever hearts need to be stirred.",
+  },
+  {
+    n: "03",
+    Icon: BookOpen,
+    title: "Composition",
+    accent: "#7C3AED",
+    desc: "Encouraging creation and preservation of new sacred works rooted in orthodox Christian tradition.",
+  },
+  {
+    n: "04",
+    Icon: Globe,
+    title: "Advocacy",
+    accent: "var(--ruby)",
+    desc: "Championing quality church music in Nigerian Christianity through speaking, writing and partnership.",
+  },
+];
+const SCRIPTS = [
+  {
+    verse:
+      "Go ye therefore, and teach all nations, baptising them in the name of the Father, and of the Son, and of the Holy Ghost.",
+    src: "Matthew 28:19",
+  },
+  {
+    verse:
+      "Let the word of Christ dwell in you richly in all wisdom; teaching and admonishing one another in psalms and hymns and spiritual songs.",
+    src: "Colossians 3:16",
+  },
+  {
+    verse:
+      "Speaking to yourselves in psalms and hymns and spiritual songs, singing and making melody in your heart to the Lord.",
+    src: "Ephesians 5:19",
+  },
+  {
+    verse:
+      "Praise ye the LORD. Sing unto the LORD a new song, and his praise in the congregation of saints.",
+    src: "Psalm 149:1",
+  },
+];
+const VALUES = [
+  {
+    Icon: Flame,
+    label: "Faith",
+    desc: "Everything flows from belief in the Lord Jesus Christ and trust in the power of His Word.",
+  },
+  {
+    Icon: Heart,
+    label: "Excellence",
+    desc: "We honour God with our best — in preparation, presentation, and pastoral care.",
+  },
+  {
+    Icon: Target,
+    label: "Community",
+    desc: "Music is communal. We build belonging wherever we go — in prisons, schools and care homes.",
+  },
+  {
+    Icon: Eye,
+    label: "Service",
+    desc: "We are compelled by the great commission to go, to give, and to sing — without expectation of return.",
+  },
+];
 
-  const pillars = [
-    {
-      icon: GraduationCap,
-      title: "Education",
-      color: "from-purple-600 to-sky-600",
-      description:
-        "We provide comprehensive music theory and practice training to develop God-given talents. Our educational programs include:",
-      points: [
-        "ABRSM exam preparation and certification",
-        "Leadership and grooming classes for young people",
-        "Vocal technique and choral training",
-        "Saturday music classes (4-6pm)",
-      ],
-    },
-    {
-      icon: Music2,
-      title: "Performance",
-      color: "from-sky-600 to-purple-600",
-      description:
-        "Our choir leads worship services and performs at various venues, bringing the beauty of sacred music to diverse audiences:",
-      points: [
-        "Regular worship services at partnering churches",
-        "Prison ministry performances and worship leading",
-        "School presentations and educational concerts",
-        "Healthcare facility ministry and care center visits",
-      ],
-    },
-    {
-      icon: Feather,
-      title: "Composition",
-      color: "from-purple-700 to-pink-600",
-      description:
-        "We encourage the creation of new sacred music while preserving and reviving ancient hymns:",
-      points: [
-        "Preserving ancient hymns that carry timeless truths",
-        "Encouraging new compositions inspired by Scripture",
-        "Adapting traditional hymns for contemporary worship",
-        "Supporting local composers and arrangers",
-      ],
-    },
-    {
-      icon: Megaphone,
-      title: "Advocacy",
-      color: "from-sky-700 to-purple-700",
-      description:
-        "We promote the importance of quality church music in worship and evangelism:",
-      points: [
-        "Distributing hymnbooks to churches, prisons, hospitals, and schools",
-        "Partnering with churches to enhance worship quality",
-        "Raising awareness about the spiritual power of hymns",
-        "Encouraging daily devotion through hymnals",
-      ],
-    },
-  ];
-
+function PillarCard({
+  n,
+  Icon,
+  title,
+  desc,
+  accent,
+  delay,
+}: {
+  n: string;
+  Icon: React.ElementType;
+  title: string;
+  desc: string;
+  accent: string;
+  delay: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
   return (
-    <div className="min-h-screen pt-24 pb-16">
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-purple-900 via-purple-800 to-sky-900 py-20 overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-          <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 32 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.68, delay, ease: E }}
+    >
+      <motion.div
+        className="cs-pillar"
+        whileHover={{ y: -8 }}
+        transition={{ type: "spring", stiffness: 260 }}
+        onMouseEnter={(e) => {
+          const el = e.currentTarget as HTMLElement;
+          el.style.borderColor = accent;
+          el.style.boxShadow = `0 20px 56px ${accent}22`;
+        }}
+        onMouseLeave={(e) => {
+          const el = e.currentTarget as HTMLElement;
+          el.style.borderColor = "var(--ink-08)";
+          el.style.boxShadow = "none";
+        }}
+      >
+        <div className="cs-pillar__num" aria-hidden>
+          {n}
         </div>
+        <div className="cs-pillar__icon" style={{ background: accent + "18" }}>
+          <Icon size={22} style={{ color: accent }} />
+        </div>
+        <div className="cs-pillar__title">{title}</div>
+        <p className="cs-pillar__desc">{desc}</p>
+        <motion.div
+          className="cs-pillar__bar"
+          style={{ background: accent }}
+          whileHover={{ width: "100%" }}
+          transition={{ duration: 0.35, ease: E }}
+        />
+      </motion.div>
+    </motion.div>
+  );
+}
 
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+function ScriptCard({
+  verse,
+  src,
+  i,
+}: {
+  verse: string;
+  src: string;
+  i: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div
+      ref={ref}
+      className="cs-verse"
+      initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
+      animate={inView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.65, delay: i * 0.1, ease: E }}
+    >
+      <div className="cs-verse__q">&quot;</div>
+      <p className="cs-verse__text">{verse}</p>
+      <div className="cs-verse__src">— {src}</div>
+    </motion.div>
+  );
+}
+
+function ValueCard({
+  Icon,
+  label,
+  desc,
+  i,
+}: {
+  Icon: React.ElementType;
+  label: string;
+  desc: string;
+  i: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 28 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.65, delay: i * 0.1, ease: E }}
+    >
+      <motion.div className="cs-value" whileHover={{ y: -6 }}>
+        <div className="cs-value__icon">
+          <Icon size={20} style={{ color: "var(--gold)" }} />
+        </div>
+        <div className="cs-value__title">{label}</div>
+        <p className="cs-value__desc">{desc}</p>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+export default function MissionPage() {
+  return (
+    <main style={{ background: "var(--ivory)" }}>
+      {/* ── HERO ── */}
+      <section
+        className="cs-hero cs-hero--page-flush"
+        style={{ background: "var(--viridian)" }}
+      >
+        <Wm
+          text="MISSION"
+          style={{
+            right: -20,
+            top: 0,
+            fontSize: "clamp(100px,20vw,300px)",
+            color: "rgba(255,255,255,0.04)",
+          }}
+        />
+        <div
+          className="container"
+          style={{ position: "relative", zIndex: 1, width: "100%" }}
+        >
           <div
-            className={`transform transition-all duration-1000 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
+            className="cs-grid cs-grid--2col"
+            style={{ alignItems: "flex-end" }}
           >
-            <div className="inline-flex items-center bg-white bg-opacity-10 backdrop-blur-md rounded-full px-6 py-2 mb-6">
-              <Target className="h-5 w-5 text-sky-300 mr-2 animate-pulse" />
-              <span className="text-sky-100 text-sm font-semibold">
+            <div style={{ paddingBottom: "var(--sp-xl)" }}>
+              <motion.span
+                className="eyebrow"
+                style={{
+                  color: "var(--gold)",
+                  display: "block",
+                  marginBottom: 16,
+                }}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
                 Our Purpose
-              </span>
+              </motion.span>
+              <motion.h1
+                className="display"
+                style={{
+                  fontSize: "clamp(3.2rem, 9vw, 10rem)",
+                  color: "#fff",
+                  lineHeight: 0.88,
+                  marginBottom: 28,
+                }}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, delay: 0.1, ease: E }}
+              >
+                Our
+                <br />
+                <em className="display-i" style={{ color: "var(--gold)" }}>
+                  Mission
+                </em>
+              </motion.h1>
+              <motion.p
+                className="serif-body"
+                style={{
+                  fontSize: "clamp(1rem,2.2vw,1.8rem)",
+                  color: "rgba(255,255,255,0.70)",
+                  lineHeight: 1.5,
+                }}
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.65, delay: 0.3, ease: E }}
+              >
+                To propagate the Word through excellence in church and choral
+                music using education, performance, composition and advocacy.
+              </motion.p>
             </div>
-
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-              Our Mission & Vision
-            </h1>
-            <p className="text-xl text-sky-100">
-              Guided by faith, empowered by music
-            </p>
+            <Fade delay={0.2}>
+              <Img
+                label="Congregation in worship"
+                dark
+                style={{
+                  width: "100%",
+                  aspectRatio: "3/4",
+                  borderRadius: "var(--r-xl) var(--r-xl) 0 0",
+                }}
+              />
+            </Fade>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10">
-        {/* Mission & Vision Cards */}
-        <div className="grid md:grid-cols-2 gap-8 mb-16">
-          <div className="group relative bg-gradient-to-br from-purple-600 to-sky-600 p-1 rounded-3xl shadow-2xl overflow-hidden transform hover:scale-105 transition-all duration-500">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-400 to-sky-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="relative bg-white rounded-3xl p-8 md:p-10 h-full">
-              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-purple-200 to-sky-200 rounded-full -mr-20 -mt-20 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
-
-              <div className="relative z-10">
-                <div className="inline-block p-4 bg-gradient-to-br from-purple-100 to-sky-100 rounded-2xl mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                  <Target className="h-10 w-10 text-purple-700" />
-                </div>
-                <h2 className="text-3xl font-bold text-purple-900 mb-4">
-                  Our Mission
-                </h2>
-                <p className="text-lg text-gray-700 leading-relaxed">
-                  To propagate the Word through excellence in church/choral
-                  music using education, performance, composition and advocacy.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="group relative bg-gradient-to-br from-sky-600 to-purple-600 p-1 rounded-3xl shadow-2xl overflow-hidden transform hover:scale-105 transition-all duration-500">
-            <div className="absolute inset-0 bg-gradient-to-br from-sky-400 to-purple-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="relative bg-white rounded-3xl p-8 md:p-10 h-full">
-              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-sky-200 to-purple-200 rounded-full -mr-20 -mt-20 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
-
-              <div className="relative z-10">
-                <div className="inline-block p-4 bg-gradient-to-br from-sky-100 to-purple-100 rounded-2xl mb-4 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300">
-                  <Music2 className="h-10 w-10 text-sky-700 animate-pulse" />
-                </div>
-                <h2 className="text-3xl font-bold text-sky-900 mb-4">
-                  Our Vision
-                </h2>
-                <p className="text-lg text-gray-700 leading-relaxed">
-                  A hymnbook in every Christian&apos;s hands
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* How We Fulfill Our Mission */}
-        <div className="mb-16">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-900 to-sky-700 bg-clip-text text-transparent mb-4">
-              How We Fulfill Our Mission
-            </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-sky-500 to-purple-600 mx-auto rounded-full"></div>
-          </div>
-
-          <div className="space-y-8">
-            {pillars.map((pillar, index) => {
-              const Icon = pillar.icon;
-              return (
+      {/* ── VISION + MISSION CARDS ── */}
+      <section
+        style={{ background: "var(--ivory-2)", padding: "var(--sp-xl) 0" }}
+      >
+        <div className="container">
+          <div className="cs-grid cs-grid--vm" style={{ gap: "var(--gap-m)" }}>
+            {[
+              {
+                Icon: Eye,
+                label: "Our Vision",
+                bg: "var(--viridian)",
+                headline: "A Hymnbook in Every Christian's Hands",
+                body: "A Nigeria where every Christian has ready access to the treasury of sacred hymnody, and ancient words of faith shape worship in every home, church, prison and hospital.",
+              },
+              {
+                Icon: Target,
+                label: "Our Mission",
+                bg: "var(--viridian-dark)",
+                headline: "Propagate the Word Through Music",
+                body: "Education, performance, composition and advocacy are our four pillars — each a means of planting the gospel more deeply in the soul through sacred music.",
+              },
+            ].map(({ Icon, label, bg, headline, body }, idx) => (
+              <Rise key={label} delay={idx * 0.12}>
                 <div
-                  key={index}
-                  className="group bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2"
-                  style={{ animationDelay: `${index * 100}ms` }}
+                  style={{
+                    borderRadius: "var(--r-xl)",
+                    background: bg,
+                    padding: "clamp(28px,5vw,44px) clamp(24px,4.5vw,40px)",
+                    position: "relative",
+                    overflow: "hidden",
+                    height: "100%",
+                  }}
                 >
-                  <div
-                    className={`bg-gradient-to-r ${pillar.color} text-white p-6 relative overflow-hidden`}
-                  >
-                    <div className="absolute right-0 top-0 w-64 h-64 bg-white opacity-10 rounded-full -mr-32 -mt-32 group-hover:scale-150 transition-transform duration-700"></div>
-                    <div className="relative z-10 flex items-center">
-                      <div className="p-3 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                        <Icon className="h-8 w-8" />
+                  <Wm
+                    text='"'
+                    style={{
+                      bottom: -20,
+                      right: -10,
+                      fontSize: "clamp(5rem,10vw,8rem)",
+                      color: "rgba(255,255,255,0.04)",
+                    }}
+                  />
+                  <div style={{ position: "relative", zIndex: 1 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                        marginBottom: 24,
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: "var(--r-s)",
+                          background: "rgba(255,255,255,0.12)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Icon size={18} color="var(--gold)" />
                       </div>
-                      <h3 className="text-2xl md:text-3xl font-bold ml-4">
-                        {pillar.title}
-                      </h3>
+                      <span
+                        className="eyebrow"
+                        style={{ color: "var(--gold)", opacity: 0.8 }}
+                      >
+                        {label}
+                      </span>
                     </div>
-                  </div>
-
-                  <div className="p-6 md:p-8">
-                    <p className="text-gray-700 mb-6 leading-relaxed text-lg">
-                      {pillar.description}
+                    <h2
+                      className="heading"
+                      style={{
+                        fontSize: "clamp(1.4rem,2.8vw,2.4rem)",
+                        color: "#fff",
+                        lineHeight: 1.1,
+                        marginBottom: 20,
+                      }}
+                    >
+                      {headline}
+                    </h2>
+                    <div
+                      style={{
+                        width: 48,
+                        height: 3,
+                        background: "var(--gold)",
+                        borderRadius: 2,
+                        marginBottom: 20,
+                      }}
+                    />
+                    <p
+                      className="body-text"
+                      style={{
+                        color: "rgba(255,255,255,0.58)",
+                        fontSize: "clamp(0.85rem,1.3vw,0.95rem)",
+                      }}
+                    >
+                      {body}
                     </p>
-                    <div className="space-y-3">
-                      {pillar.points.map((point, pointIndex) => (
-                        <div
-                          key={pointIndex}
-                          className="flex items-start group/item hover:bg-gradient-to-r hover:from-sky-50 hover:to-purple-50 p-3 rounded-xl transition-all duration-300 transform hover:translate-x-2"
-                        >
-                          <div
-                            className={`flex-shrink-0 w-8 h-8 bg-gradient-to-br ${pillar.color} rounded-full flex items-center justify-center mr-4 group-hover/item:scale-110 transition-transform duration-300 shadow-lg`}
-                          >
-                            <Sparkles className="h-4 w-4 text-white" />
-                          </div>
-                          <span className="text-gray-700 pt-1">{point}</span>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 </div>
-              );
-            })}
+              </Rise>
+            ))}
           </div>
         </div>
+      </section>
 
-        {/* Christ for the World */}
-        <div className="bg-gradient-to-br from-sky-50 to-purple-50 p-8 md:p-12 rounded-3xl border-l-4 border-purple-600 mb-16 shadow-xl transform hover:scale-[1.02] transition-all duration-300">
-          <div className="flex items-center mb-6">
-            <div className="p-3 bg-gradient-to-br from-purple-100 to-sky-100 rounded-2xl">
-              <Music2 className="h-8 w-8 text-purple-700 animate-pulse" />
+      {/* ── FOUR PILLARS ── */}
+      <section style={{ background: "#fff", padding: "var(--sp-xl) 0" }}>
+        <div className="container">
+          <div style={{ textAlign: "center", marginBottom: "var(--sp-l)" }}>
+            <Rise>
+              <Label>How We Work</Label>
+              <h2
+                className="display"
+                style={{
+                  fontSize: "clamp(2.4rem,5.5vw,5.5rem)",
+                  color: "var(--viridian)",
+                  lineHeight: 0.9,
+                  marginTop: 10,
+                }}
+              >
+                The Four{" "}
+                <em className="display-i" style={{ color: "var(--gold-dark)" }}>
+                  Pillars
+                </em>
+              </h2>
+            </Rise>
+          </div>
+          <div className="cs-grid cs-grid--4col">
+            {PILLARS.map((p, i) => (
+              <PillarCard key={p.title} {...p} delay={i * 0.1} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── SCRIPTURE ── */}
+      <section
+        style={{ background: "var(--ivory-2)", padding: "var(--sp-xl) 0" }}
+      >
+        <div className="container">
+          <div
+            className="cs-grid cs-grid--2col"
+            style={{ alignItems: "start" }}
+          >
+            <div>
+              <Rise>
+                <Label>Biblical Basis</Label>
+                <h2
+                  className="display"
+                  style={{
+                    fontSize: "clamp(2.2rem,5vw,5rem)",
+                    color: "var(--viridian)",
+                    lineHeight: 0.9,
+                    marginTop: 10,
+                    marginBottom: 24,
+                  }}
+                >
+                  Rooted in{" "}
+                  <em
+                    className="display-i"
+                    style={{ color: "var(--gold-dark)" }}
+                  >
+                    Scripture
+                  </em>
+                </h2>
+                <GoldRule />
+                <p
+                  className="body-text"
+                  style={{
+                    color: "var(--ink-70)",
+                    fontSize: "clamp(0.9rem,1.5vw,1.05rem)",
+                    marginBottom: 32,
+                  }}
+                >
+                  Our work is not merely cultural or artistic — it is obedience.
+                  The Bible commands us to sing, to teach one another in psalms
+                  and hymns.
+                </p>
+              </Rise>
+              <Fade delay={0.2}>
+                <Img
+                  label="Open Bible and hymnbook"
+                  style={{
+                    width: "100%",
+                    aspectRatio: "4/3",
+                    borderRadius: "var(--r-l)",
+                  }}
+                />
+              </Fade>
             </div>
-            <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-900 to-sky-700 bg-clip-text text-transparent ml-4">
-              Christ for the World We Sing
-            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {SCRIPTS.map((s, i) => (
+                <ScriptCard key={i} verse={s.verse} src={s.src} i={i} />
+              ))}
+            </div>
           </div>
-
-          <p className="text-gray-700 mb-4 leading-relaxed text-lg">
-            Music is at the heart of evangelism. Through our various ministries,
-            we bring the message of hope and salvation to those in prisons,
-            schools, hospitals, and care centers.
-          </p>
-          <p className="text-gray-700 leading-relaxed text-lg">
-            We believe that the ancient words of hymns, preserved through
-            generations, carry God&apos;s own heart and can transform lives today.
-            These holy words provide strength, hope, and guidance as we navigate
-            our walk in this world.
-          </p>
         </div>
+      </section>
 
-        {/* CTA */}
-        <div className="relative bg-gradient-to-br from-purple-900 via-purple-800 to-sky-900 rounded-3xl shadow-2xl p-8 md:p-12 text-center overflow-hidden">
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute top-0 left-0 w-64 h-64 bg-sky-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-            <div className="absolute bottom-0 right-0 w-64 h-64 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+      {/* ── CORE VALUES ── */}
+      <section
+        style={{
+          background: "var(--viridian)",
+          padding: "var(--sp-xl) 0",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <Wm
+          text="VALUES"
+          style={{
+            right: -10,
+            top: 0,
+            fontSize: "clamp(100px,18vw,260px)",
+            color: "rgba(255,255,255,0.04)",
+          }}
+        />
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <div style={{ textAlign: "center", marginBottom: "var(--sp-l)" }}>
+            <Rise>
+              <span
+                className="eyebrow"
+                style={{
+                  color: "var(--gold)",
+                  display: "block",
+                  marginBottom: 14,
+                }}
+              >
+                What Drives Us
+              </span>
+              <h2
+                className="display"
+                style={{
+                  fontSize: "clamp(2.4rem,5.5vw,5.5rem)",
+                  color: "#fff",
+                  lineHeight: 0.9,
+                }}
+              >
+                Core{" "}
+                <em className="display-i" style={{ color: "var(--gold)" }}>
+                  Values
+                </em>
+              </h2>
+            </Rise>
           </div>
+          <div className="cs-grid cs-grid--4col">
+            {VALUES.map((v, i) => (
+              <ValueCard key={v.label} {...v} i={i} />
+            ))}
+          </div>
+        </div>
+      </section>
 
-          <div className="relative z-10">
-            <Sparkles className="h-16 w-16 text-sky-300 mx-auto mb-6 animate-pulse" />
-            <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Join Our Mission
-            </h3>
-            <p className="text-xl text-sky-100 mb-8 max-w-2xl mx-auto">
-              Help us put a hymnbook in every Christian&apos;s hands and spread
-              the gospel through music
+      {/* ── CTA ── */}
+      <section
+        className="cs-cta"
+        style={{ background: "var(--gold)", padding: "var(--sp-xl) 0" }}
+      >
+        <Wm
+          text="ACT"
+          style={{
+            right: -10,
+            bottom: -20,
+            fontSize: "clamp(100px,18vw,260px)",
+            color: "rgba(255,255,255,0.08)",
+          }}
+        />
+        <div
+          className="container"
+          style={{
+            position: "relative",
+            zIndex: 1,
+            textAlign: "center",
+            maxWidth: 680,
+          }}
+        >
+          <Rise>
+            <h2
+              className="cs-cta__title"
+              style={{ fontSize: "clamp(2.4rem,7vw,6.5rem)" }}
+            >
+              Be Part of Something Eternal
+            </h2>
+            <p className="cs-cta__body">
+              The mission is vast, the harvest great — there is room for your
+              gifts, time and generosity.
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <a
-                href="/get-involved"
-                className="group px-8 py-4 bg-white text-purple-900 rounded-full font-bold hover:bg-sky-100 transition-all duration-300 transform hover:scale-105 shadow-2xl inline-flex items-center"
-              >
-                Support Our Mission
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+            <div className="cs-btn-group" style={{ justifyContent: "center" }}>
+              <a href="/get-involved" className="btn btn-viridian">
+                Get Involved <ArrowRight size={16} />
               </a>
-              <a
-                href="/membership"
-                className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-bold hover:bg-white hover:text-purple-900 transition-all duration-300 transform hover:scale-105"
-              >
+              <a href="/membership" className="btn btn-outline-white">
                 Become a Member
               </a>
             </div>
-          </div>
+          </Rise>
         </div>
-      </div>
-
-      <style>{`
-        @keyframes blob {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          25% { transform: translate(20px, -50px) scale(1.1); }
-          50% { transform: translate(-20px, 20px) scale(0.9); }
-          75% { transform: translate(50px, 50px) scale(1.05); }
-        }
-        
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
-    </div>
+      </section>
+    </main>
   );
-};
-
-export default MissionPage;
+}
